@@ -4,7 +4,7 @@
 //  do próprio Combatant (documento nativo). Volta tudo no início do turno dele.
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { MOD, cfg, combateAtivo, combatenteDoAtor, isActiveGM, loc } from "./core.js";
+import { MOD, apagarEfeitos, cfg, combateAtivo, combatenteDoAtor, isActiveGM, loc } from "./core.js";
 import { cartaEmUso, usaCartas } from "./cartas/index.js";
 
 export const PADRAO = Object.freeze({ acao: false, bonus: false, reacao: false, disparada: false });
@@ -97,8 +97,10 @@ export function instalarEconomia(aoMudar) {
     try {
       if (c.getFlag(MOD, "economia")) await c.setFlag(MOD, "economia", { ...PADRAO });
       // Esquiva dura até o início do próximo turno de quem esquivou
+      // (apaga sem erro caso o próprio dnd5e/Foundry já tenha tirado a esquiva)
       if (c.getFlag(MOD, "esquivou") && c.actor?.statuses?.has("dodging")) {
-        await c.actor.toggleStatusEffect("dodging", { active: false });
+        const ids = c.actor.effects.filter(e => e.statuses?.has("dodging")).map(e => e.id);
+        await apagarEfeitos(c.actor, ids);
       }
       if (c.getFlag(MOD, "esquivou")) await c.unsetFlag(MOD, "esquivou");
       if (c.token?.movementHistory?.length) await c.token.clearMovementHistory();

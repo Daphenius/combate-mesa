@@ -157,5 +157,10 @@
   "COMBATE.Settings.alvoAoClicar.pedir": "Quando a ação pedir alvo",
   "COMBATE.Alvo.clique": "Clique no token do alvo (Esc cancela).",
   "COMBATE.Alvo.cliqueCom": "{nome}: clique no token do alvo (Esc cancela).",
-  "COMBATE.Alvo.marcado": "Alvo: {nome}"
+  "COMBATE.Alvo.marcado": "Alvo: {nome}",
+  "COMBATE.Settings.dadosEmCena.Name": "Rolar testes no Dados em Cena",
+  "COMBATE.Settings.dadosEmCena.Hint": "Se o módulo Dados em Cena estiver ativo, os testes do combate (Esconder, Procurar, Agarrar/Empurrar e a defesa de quem é agarrado) e as salvaguardas contra magias e habilidades abrem a tela do Dados em Cena para o dono do personagem rolar. Precisa de um mestre on-line.",
+  "COMBATE.Dados.semSalvaguarda": "{nome} não rolou a salvaguarda contra {origem} a tempo.",
+  "COMBATE.Settings.limparAlvo.Name": "Desmarcar o alvo depois da ação",
+  "COMBATE.Settings.limparAlvo.Hint": "No combate, o alvo é desmarcado sozinho quando a ação termina (depois da rolagem de dano, do ataque ou do uso) e na troca de turno, para a próxima ação pedir o alvo de novo."
 }

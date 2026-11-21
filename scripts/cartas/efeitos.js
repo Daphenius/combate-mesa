@@ -8,8 +8,9 @@
 //  ativo executa ao recebê-la. Sem socket.
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { pedirAlvo } from "../alvo-automatico.js";
-import { MOD, combateAtivo, esc, isActiveGM, loc, tokenNoMapa } from "../core.js";
+import { limparAlvosDepois, pedirAlvo } from "../alvo-automatico.js";
+import { pedirTesteDados, testeNoDados, usarDadosEmCena } from "../dados-em-cena.js";
+import { MOD, apagarEfeitos, combateAtivo, esc, isActiveGM, loc, tokenNoMapa } from "../core.js";
 import { cartasCustom, regras } from "./config.js";
 import { comprar, estadoCartas, salvarCartas, tirarDaMao, usaCartas } from "./baralho.js";
 import { infoCarta, itemFormaSelvagem, opcoesAtaque, opcoesItem, opcoesMagia, ehDefesa } from "./tipos.js";
@@ -118,7 +119,7 @@ const EFEITOS = {
     return { ok: usou(await item.use({ event })) };
   },
 
-  // Truques: não gastam nada, então a carta sempre volta para a mão
+  // Truques: não gastam nada; a carta volta para o baralho e pode vir de novo nas próximas compras
   async truque({ actor, event }) {
     const item = await escolherMagia(actor, { circulos: false });
     if (!item) return { ok: false };
@@ -149,7 +150,8 @@ const EFEITOS = {
     return { ok: true };
   },
 
-  async esconder({ actor, event }) {
+  async esconder({ actor, token, event }) {
+    if (pedirTesteDados({ actor, token, kind: "skill", key: "ste" })) return { ok: true };
     const r = await actor.rollSkill({ skill: "ste", event });
     return { ok: usou(r) };
   },
@@ -183,7 +185,7 @@ const EFEITOS = {
 
   // +2 na CA de um aliado marcado (o mestre aplica, porque o aliado é de outro jogador)
   async proteger({ combatant }) {
-    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.proteger.nome") });
+    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.proteger.nome"), ator: combatant.actor });
     if (!alvo?.actor || alvo.actor.uuid === combatant.actor?.uuid) {
       ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueProteger"));
       return { ok: false };
@@ -192,7 +194,7 @@ const EFEITOS = {
   },
 
   async ajudar({ combatant }) {
-    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.ajudar.nome") });
+    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.ajudar.nome"), ator: combatant.actor });
     if (!alvo?.actor || alvo.actor.uuid === combatant.actor?.uuid) {
       ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueAliado"));
       return { ok: false };
@@ -200,14 +202,19 @@ const EFEITOS = {
     return { ok: true, acao: { tipo: "ajudar", alvo: alvo.actor.uuid }, extra: alvo.name };
   },
 
-  async agarrar({ actor, event }) {
-    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.agarrar.nome") });
+  async agarrar({ actor, token, event }) {
+    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.agarrar.nome"), ator: actor });
     if (!alvo?.actor) { ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueAlvo")); return { ok: false }; }
     const modo = await escolher(loc("COMBATE.Cartas.escolher.agarrar"), [
       { valor: "agarrar", img: "icons/svg/net.svg", nome: loc("COMBATE.Cartas.agarrar.agarrar") },
       { valor: "empurrar", img: "icons/svg/falling.svg", nome: loc("COMBATE.Cartas.agarrar.empurrar") }
     ]);
     if (!modo) return { ok: false };
+    // com o Dados em Cena, o mestre abre a tela para os dois lados rolarem
+    if (usarDadosEmCena()) {
+      const atacante = (token?.document ?? null)?.uuid ?? null;
+      return { ok: true, acao: { tipo: "agarrar", modo, total: null, atacante, ator: actor.uuid, alvo: alvo.document.uuid }, extra: alvo.name };
+    }
     const rolls = await actor.rollSkill({ skill: "ath", event });
     const total = rolls?.[0]?.total ?? rolls?.total;
     if (!Number.isFinite(total)) return { ok: false };
@@ -297,7 +304,7 @@ async function criarDefesa(actor, combatant, tipo, changes) {
 // A carta volta para a mão depois de usada? Truque sempre; Magia enquanto houver
 // espaço de magia; Habilidade enquanto houver usos (sem limite de usos, sempre).
 function aindaTemRecurso(actor, carta) {
-  if (carta.tipo === "truque") return true;
+  // truque não gasta nada, mas a carta volta para o baralho (não para a mão)
   if (carta.tipo === "magia") {
     const sp = actor.system?.spells ?? {};
     return Object.values(sp).some(s => (Number(s?.max) || 0) > 0 && (Number(s?.value) || 0) > 0);
@@ -358,6 +365,8 @@ export async function jogarCarta(combatant, uid, event) {
     await salvarCartas(combatant, { mao: [...st.mao, carta] });
   }
   await anunciarCarta(combatant, carta, res);
+  // cartas que usam o alvo direto (sem rolagem do dnd5e depois): desmarca já
+  if (["agarrar", "ajudar", "proteger", "menos2"].includes(carta.tipo)) limparAlvosDepois();
 }
 
 // Mensagem de chat da carta. Todos os clientes veem a revelação (ver revelar.js)
@@ -394,16 +403,30 @@ async function aplicarAjuda(actorUuid, origem) {
   }]);
 }
 
-async function resolverAgarrar({ modo, total, alvo: tokenUuid }, speaker) {
+async function resolverAgarrar({ modo, total, alvo: tokenUuid, atacante, ator }, speaker) {
   const tokenDoc = await fromUuid(tokenUuid);
   const actor = tokenDoc?.actor;
   if (!actor) return;
-  // defesa: o melhor entre Atletismo e Acrobacia do alvo, rolado pelo próprio dnd5e
+  // sem total: o teste de Atletismo de quem agarra é rolado agora, no Dados em Cena
+  if (!Number.isFinite(total)) {
+    const tokAtq = atacante ? await fromUuid(atacante) : null;
+    const atorAtq = tokAtq?.actor ?? (ator ? await fromUuid(ator) : null);
+    total = await testeNoDados({ tokenDoc: tokAtq, actor: atorAtq, kind: "skill", key: "ath" });
+    if (!Number.isFinite(total)) {
+      await ChatMessage.create({ speaker, content: `<div class="cmb-chat-acao"><i class="fa-solid fa-hand-fist"></i><div>${loc("COMBATE.Cartas.agarrar.semRolagem")}</div></div>` });
+      return;
+    }
+  }
+  // defesa: o melhor entre Atletismo e Acrobacia do alvo
   const ath = actor.system?.skills?.ath?.total ?? 0;
   const acr = actor.system?.skills?.acr?.total ?? 0;
   const skill = acr > ath ? "acr" : "ath";
-  const rolls = await actor.rollSkill({ skill }, { configure: false }, { data: { speaker: ChatMessage.getSpeaker({ actor, token: tokenDoc }) } });
-  const defesa = rolls?.[0]?.total ?? rolls?.total ?? 0;
+  let defesa = null;
+  if (usarDadosEmCena()) defesa = await testeNoDados({ tokenDoc, actor, kind: "skill", key: skill });
+  if (!Number.isFinite(defesa)) {
+    const rolls = await actor.rollSkill({ skill }, { configure: false }, { data: { speaker: ChatMessage.getSpeaker({ actor, token: tokenDoc }) } });
+    defesa = rolls?.[0]?.total ?? rolls?.total ?? 0;
+  }
   const venceu = total >= defesa;
   if (venceu) await actor.toggleStatusEffect(modo === "agarrar" ? "grappled" : "prone", { active: true });
   const chave = venceu ? `COMBATE.Cartas.agarrar.venceu.${modo}` : "COMBATE.Cartas.agarrar.falhou";
@@ -455,7 +478,7 @@ export function instalarAjuda() {
     if (!ef) return;
     config.advantage = true;
     for (const r of config.rolls ?? []) { r.options ??= {}; r.options.advantage = true; }
-    if (ef.isOwner) ef.delete();
+    if (ef.isOwner) apagarEfeitos(actor, [ef.id]);
   };
   Hooks.on("dnd5e.preRollAttackV2", config => aplicar(config, config.subject?.actor));
   Hooks.on("dnd5e.preRollAbilityCheckV2", config => aplicar(config, config.subject));
@@ -484,7 +507,8 @@ export async function verificarArmadilha(message) {
     if (!armadilha) continue;
     await salvarCartas(c, { armadilha: null });
     await anunciarCarta(c, armadilha, { gatilho: true });
-    // contra-ataque: mira no atacante e escolhe o ataque
+    // contra-ataque: mira no atacante e ganha um ataque E uma magia, na hora
+    // (cada escolha pode ser cancelada; a magia gasta o espaço normalmente)
     const atacante = atacanteId ? canvas.tokens?.get(atacanteId) : null;
     if (atacante) atacante.setTarget(true, { releaseOthers: true, groupSelection: false });
     const meu = tokenNoMapa(c);
@@ -492,6 +516,10 @@ export async function verificarArmadilha(message) {
     await comCarta(async () => {
       const act = await escolherAtaque(c.actor);
       if (act) await act.use({});
+      if (opcoesMagia(c.actor).length) {
+        const magia = await escolherMagia(c.actor, {});
+        if (magia) await magia.use({});
+      }
     });
   }
 }

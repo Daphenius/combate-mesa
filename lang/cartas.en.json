@@ -64,7 +64,7 @@
   "COMBATE.Cartas.tipo.agarrar.nome": "Grapple / Shove",
   "COMBATE.Cartas.tipo.agarrar.texto": "Athletics against the target. On a win, they are Grappled or Prone.",
   "COMBATE.Cartas.tipo.armadilha.nome": "Trap",
-  "COMBATE.Cartas.tipo.armadilha.texto": "Set face down. When someone attacks you, it triggers and you strike back.",
+  "COMBATE.Cartas.tipo.armadilha.texto": "Set face down. When someone attacks you, it triggers: you get an attack and a spell against the attacker.",
   "COMBATE.Cartas.tipo.mais2.nome": "Draw +2",
   "COMBATE.Cartas.tipo.mais2.texto": "Draw 2 random cards from your deck now.",
   "COMBATE.Cartas.tipo.menos2.nome": "Cut −2",
@@ -148,10 +148,11 @@
   "COMBATE.Cartas.aviso.defesaUsada": "This defense card was already used this combat.",
   "COMBATE.Cartas.aviso.marqueProteger": "Target the ally you want to protect.",
   "COMBATE.Cartas.tipo.truque.nome": "Cantrip",
-  "COMBATE.Cartas.tipo.truque.texto": "Cast a cantrip. Costs nothing and the card returns to your hand.",
+  "COMBATE.Cartas.tipo.truque.texto": "Cast a cantrip. Costs nothing and the card goes back to your deck.",
   "COMBATE.Cartas.escolher.truque": "Choose the cantrip",
   "COMBATE.Cartas.aviso.semTruque": "This character has no cantrips.",
   "COMBATE.Cartas.mao.zonaGuardada": "Kept",
   "COMBATE.Cartas.mao.zonaGuardadaDica": "Right-click a card in your hand to keep it here. It comes back in your next hand (taking one of its slots). Click it to return it to your hand now.",
-  "COMBATE.Cartas.mao.guardadaVolta": "Comes back in your next hand. Click to return it to your hand now."
+  "COMBATE.Cartas.mao.guardadaVolta": "Comes back in your next hand. Click to return it to your hand now.",
+  "COMBATE.Cartas.agarrar.semRolagem": "Grapple / Shove cancelled: nobody rolled the check in time."
 }

@@ -67,3 +67,24 @@ export function movimentoReduzido() {
   modo ??= canvas?.performance?.mode;
   return Number.isInteger(modo) && modo <= (CONST.CANVAS_PERFORMANCE_MODES?.LOW ?? 0);
 }
+
+// Apaga efeitos de um ator sem erro se algum já sumiu (o Foundry pode expirar
+// o efeito sozinho, ou outro cliente/gancho apagar primeiro).
+const apagando = new Set();
+export async function apagarEfeitos(actor, ids) {
+  if (!actor) return;
+  const vivos = [...new Set(ids)].filter(id => actor.effects.has(id) && !apagando.has(`${actor.uuid}.${id}`));
+  if (!vivos.length) return;
+  vivos.forEach(id => apagando.add(`${actor.uuid}.${id}`));
+  try {
+    await actor.deleteEmbeddedDocuments("ActiveEffect", vivos);
+  } catch {
+    // algum sumiu no meio do caminho: tenta um a um, ignorando os que não existem mais
+    for (const id of vivos) {
+      if (!actor.effects.has(id)) continue;
+      try { await actor.deleteEmbeddedDocuments("ActiveEffect", [id]); } catch { /* já apagado */ }
+    }
+  } finally {
+    vivos.forEach(id => apagando.delete(`${actor.uuid}.${id}`));
+  }
+}

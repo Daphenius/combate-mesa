@@ -47,6 +47,36 @@ function marcaSemPedido(token) {
   return !token.document.isOwner;
 }
 
+// O token é de quem está agindo? (o ator do pedido, um token selecionado,
+// ou, para o jogador, qualquer token dele)
+function ehProprio(token) {
+  if (token.controlled) return true;
+  const uuid = token.actor?.uuid;
+  if (pedido?.ator && uuid === pedido.ator) return true;
+  if (!game.user.isGM && token.document.isOwner) return true;
+  return false;
+}
+
+/** Tira todos os alvos marcados por este usuário. */
+export function limparAlvos() {
+  const alvos = [...game.user.targets];
+  if (!alvos.length) return;
+  if (typeof game.user.updateTokenTargets === "function" && !alvos.some(t => typeof t.setTarget === "function")) {
+    game.user.updateTokenTargets([]);
+    return;
+  }
+  alvos.forEach((t, i) => t.setTarget(false, { releaseOthers: false, groupSelection: i < alvos.length - 1 }));
+}
+
+// Limpa os alvos logo depois da ação (com um respiro, para o dnd5e e o Dados em Cena
+// lerem os alvos antes)
+let limpeza = null;
+export function limparAlvosDepois() {
+  if (cfg("limparAlvo") === false) return;
+  clearTimeout(limpeza);
+  limpeza = setTimeout(limparAlvos, 400);
+}
+
 function marcar(token, somar) {
   if (typeof token.setTarget === "function") {
     token.setTarget(true, { releaseOthers: !somar, groupSelection: false });
@@ -72,7 +102,7 @@ function encerrarPedido(token) {
  * ou null se cancelar (Esc), expirar ou se o recurso estiver desligado.
  * Se já houver alvo marcado, resolve na hora com ele.
  */
-export function pedirAlvo({ nome = "" } = {}) {
+export function pedirAlvo({ nome = "", ator = null } = {}) {
   const atual = game.user.targets.first();
   if (atual) return Promise.resolve(atual);
   if (modo() === "desligado" || !canvas.ready) return Promise.resolve(null);
@@ -80,7 +110,7 @@ export function pedirAlvo({ nome = "" } = {}) {
   return new Promise(resolver => {
     const texto = nome ? loc("COMBATE.Alvo.cliqueCom", { nome }) : loc("COMBATE.Alvo.clique");
     const aviso = ui.notifications.info(texto);
-    pedido = { resolver, aviso, timer: setTimeout(() => encerrarPedido(null), ESPERA_MS) };
+    pedido = { resolver, aviso, ator: ator?.uuid ?? null, timer: setTimeout(() => encerrarPedido(null), ESPERA_MS) };
     document.body.classList.add("cmb-escolhendo-alvo");
     // a camada de tokens precisa estar ativa para o clique chegar
     if (!canvas.tokens.active) canvas.tokens.activate();
@@ -119,6 +149,9 @@ export function instalarAlvoAutomatico() {
     const token = tokenNoPonto(p);
     if (!token) return;
     if (pedido) {
+      // clicar no próprio personagem (ou num token selecionado) é seleção normal,
+      // não alvo: o pedido continua esperando o clique no alvo
+      if (ehProprio(token)) return;
       marcar(token, ev.shiftKey);
       ui.notifications.info(loc("COMBATE.Alvo.marcado", { nome: token.name }));
       encerrarPedido(token);
@@ -143,6 +176,27 @@ export function instalarAlvoAutomatico() {
   Hooks.on("dnd5e.preUseActivity", activity => {
     if (modo() === "desligado" || !combateAtivo() || game.user.targets.size || pedido) return;
     if (!precisaAlvo(activity)) return;
-    pedirAlvo({ nome: activity.item?.name ?? activity.name ?? "" });
+    pedirAlvo({ nome: activity.item?.name ?? activity.name ?? "", ator: activity.actor });
+  });
+
+  // ── Depois da ação, o alvo é desmarcado ──
+  // Ataque: depois da rolagem de dano (ou do ataque, se a atividade não tem dano).
+  // Cura/dano sem ataque: depois da rolagem. Sem rolagem nenhuma: logo após o uso.
+  const temDano = a => !!(a?.damage?.parts?.length || a?.healing?.formula || a?.healing?.number || a?.healing?.custom?.enabled);
+  Hooks.on("dnd5e.postUseActivity", activity => {
+    if (!activity || !combateAtivo()) return;
+    if (activity.type === "attack" || temDano(activity)) return; // espera a rolagem
+    limparAlvosDepois();
+  });
+  Hooks.on("dnd5e.rollAttackV2", (rolls, data) => {
+    if (!combateAtivo() || temDano(data?.subject)) return;
+    limparAlvosDepois();
+  });
+  Hooks.on("dnd5e.rollDamageV2", () => {
+    if (combateAtivo()) limparAlvosDepois();
+  });
+  // e na troca de turno ninguém fica com alvo antigo marcado
+  Hooks.on("combatTurnChange", () => {
+    if (cfg("limparAlvo") !== false && !pedido) limparAlvos();
   });
 }

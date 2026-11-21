@@ -2,6 +2,24 @@
 
 > ⚠️ **Beta, em testes:** o Combate da Mesa ainda está sendo testado no Foundry VTT 14 e no D&D 5e 6 e pode ter erros. Teste primeiro num mundo de teste ou faça backup antes de ativar. Bugs e sugestões: https://github.com/Daphenius/combate-mesa/issues
 
+## v0.3.5 (beta)
+
+- **Correção do alvo no próprio personagem:** enquanto o módulo espera o clique no alvo, clicar no seu próprio token (ou num token selecionado) agora é só seleção normal e não marca você mesmo como alvo; o aviso continua esperando o clique no alvo de verdade.
+- **Alvo desmarcado depois da ação:** no combate, o alvo é desmarcado sozinho quando a ação termina (depois da rolagem de dano, ou do ataque/uso quando não há dano; e logo após Agarrar, Ajudar, Proteger e −2) e também na troca de turno. Assim a próxima ação pede o alvo de novo. Pode ser desligado em Interface.
+
+## v0.3.4 (beta)
+
+- **Integração com o Dados em Cena:** com o módulo Dados em Cena ativo, os testes do combate abrem a tela do Dados em Cena para o dono do personagem rolar os dados. Vale para Esconder e Procurar (barra e cartas) e para Agarrar/Empurrar, em que quem agarra rola Atletismo e o alvo rola Atletismo ou Acrobacia, cada um na sua tela. Salvaguardas contra magias e habilidades também: ao usar uma magia com teste de resistência (ex.: Bola de Fogo), cada alvo marcado rola a salvaguarda na tela do Dados em Cena, um por vez, contra a CD da magia, e o chat mostra quem passou ou falhou. Pode ser desligado em Regras. Precisa de um mestre on-line; sem o Dados em Cena, tudo rola como antes.
+
+## v0.3.3 (beta)
+
+- **Correção:** o erro vermelho "id [...] does not exist in the EmbeddedCollection collection" no início do turno. Acontecia quando o módulo tentava tirar um efeito (Esquiva, cartas de defesa ou Ajudar) que o Foundry ou o dnd5e já tinham tirado sozinhos. Agora o módulo confere antes e ignora o que já sumiu.
+
+## v0.3.2 (beta)
+
+- **Truque volta para o baralho:** depois de usada, a carta Truque sai da mão e volta para o baralho, podendo vir de novo nas próximas compras (antes ela voltava direto para a mão).
+- **Contra-ataque mais forte:** quando a carta de reação (Armadilha) dispara, o jogador ganha um ataque e também uma magia contra quem atacou (o alvo já vem marcado; a magia gasta o espaço normalmente e cada escolha pode ser cancelada).
+
 ## v0.3.1 (beta)
 
 - **Alvo ao clicar:** ao usar uma carta ou ação que precisa de alvo (Atacar, Agarrar, Ajudar, Proteger, habilidades, magias e ataques da barra) sem ter marcado ninguém, aparece um aviso e o próximo clique num token já marca ele como alvo, sem trocar para a ferramenta Alvo (Esc cancela, Shift+clique soma alvos). Fora disso os cliques continuam normais. Em Interface dá para escolher "Sempre" (clicar no token de outro sempre marca alvo) ou desligar.

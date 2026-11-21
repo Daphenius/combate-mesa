@@ -10,8 +10,8 @@ import { MOD } from "./core.js";
 // Seções do painel, na ordem em que aparecem. Outras partes do módulo podem
 // acrescentar seções com adicionarSecao() durante o "init".
 export const SECOES = [
-  { id: "interface", icone: "fa-solid fa-table-columns", chaves: ["tema", "tamanhoBarra", "linhaTempo", "barraAcoes", "imagem", "esconderHotbar", "alvoAoClicar"] },
-  { id: "regras", icone: "fa-solid fa-scale-balanced", chaves: ["economiaRigida", "vidaInimigos", "iniciativaInimigos"] },
+  { id: "interface", icone: "fa-solid fa-table-columns", chaves: ["tema", "tamanhoBarra", "linhaTempo", "barraAcoes", "imagem", "esconderHotbar", "alvoAoClicar", "limparAlvo"] },
+  { id: "regras", icone: "fa-solid fa-scale-balanced", chaves: ["economiaRigida", "vidaInimigos", "iniciativaInimigos", "dadosEmCena"] },
   { id: "cena", icone: "fa-solid fa-clapperboard", chaves: ["animacoes", "anuncio", "camera", "marcador", "resultados"] }
 ];
 
@@ -55,6 +55,8 @@ export function registerSettings(onChange) {
   reg("marcador", "world", { type: Boolean, default: true, requiresReload: true });
   reg("resultados", "world", { type: Boolean, default: true });
   reg("esconderHotbar", "world", { type: Boolean, default: true });
+  reg("dadosEmCena", "world", { type: Boolean, default: true });
+  reg("limparAlvo", "world", { type: Boolean, default: true });
   reg("alvoAoClicar", "world", {
     type: String, default: "pedir",
     choices: { pedir: "COMBATE.Settings.alvoAoClicar.pedir", sempre: "COMBATE.Settings.alvoAoClicar.sempre", desligado: "COMBATE.Settings.alvoAoClicar.desligado" }

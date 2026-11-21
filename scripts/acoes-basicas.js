@@ -8,6 +8,7 @@
 import { MOD, cfg, combateAtivo, esc, loc } from "./core.js";
 import { definir, estado } from "./economia.js";
 import { cartaEmUso } from "./cartas/index.js";
+import { pedirTesteDados } from "./dados-em-cena.js";
 
 export const ACOES_BASICAS = [
   { id: "disparada", icone: "fa-solid fa-person-running", selo: "acao" },
@@ -55,9 +56,11 @@ export async function usarAcaoBasica(id, { actor, combatant, token, event }) {
       return cartao(actor, token, acao);
     case "esconder":
       if (combatant) await definir(combatant, { [acao.selo]: true });
+      if (pedirTesteDados({ actor, token, kind: "skill", key: "ste" })) return true;
       return actor.rollSkill({ skill: "ste", event });
     case "procurar":
       if (combatant) await definir(combatant, { [acao.selo]: true });
+      if (pedirTesteDados({ actor, token, kind: "skill", key: "prc" })) return true;
       return actor.rollSkill({ skill: "prc", event });
     case "ajudar": {
       if (combatant) await definir(combatant, { [acao.selo]: true });

@@ -64,7 +64,7 @@
   "COMBATE.Cartas.tipo.agarrar.nome": "Agarrar / Empurrar",
   "COMBATE.Cartas.tipo.agarrar.texto": "Atletismo contra o alvo marcado. Vencendo, ele fica Agarrado ou Caído.",
   "COMBATE.Cartas.tipo.armadilha.nome": "Armadilha",
-  "COMBATE.Cartas.tipo.armadilha.texto": "Baixe virada. Quando alguém atacar você, ela dispara e você contra-ataca.",
+  "COMBATE.Cartas.tipo.armadilha.texto": "Baixe virada. Quando alguém atacar você, ela dispara: você ganha um ataque e uma magia contra quem atacou.",
   "COMBATE.Cartas.tipo.mais2.nome": "Compre +2",
   "COMBATE.Cartas.tipo.mais2.texto": "Compre 2 cartas aleatórias do seu baralho agora.",
   "COMBATE.Cartas.tipo.menos2.nome": "Corte −2",
@@ -148,10 +148,11 @@
   "COMBATE.Cartas.aviso.defesaUsada": "Esta carta de defesa já foi usada neste combate.",
   "COMBATE.Cartas.aviso.marqueProteger": "Marque (alvo) o aliado que você quer proteger.",
   "COMBATE.Cartas.tipo.truque.nome": "Truque",
-  "COMBATE.Cartas.tipo.truque.texto": "Conjure um truque. Não gasta nada e a carta volta para a mão.",
+  "COMBATE.Cartas.tipo.truque.texto": "Conjure um truque. Não gasta nada e a carta volta para o baralho.",
   "COMBATE.Cartas.escolher.truque": "Escolha o truque",
   "COMBATE.Cartas.aviso.semTruque": "Este personagem não tem truques.",
   "COMBATE.Cartas.mao.zonaGuardada": "Guardada",
   "COMBATE.Cartas.mao.zonaGuardadaDica": "Botão direito numa carta da mão guarda ela aqui. Ela volta na sua próxima mão (e ocupa um dos espaços). Clique nela para devolver à mão agora.",
-  "COMBATE.Cartas.mao.guardadaVolta": "Volta na sua próxima mão. Clique para devolver à mão agora."
+  "COMBATE.Cartas.mao.guardadaVolta": "Volta na sua próxima mão. Clique para devolver à mão agora.",
+  "COMBATE.Cartas.agarrar.semRolagem": "Agarrar / Empurrar cancelado: ninguém rolou o teste a tempo."
 }

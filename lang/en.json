@@ -157,5 +157,10 @@
   "COMBATE.Settings.alvoAoClicar.pedir": "When the action needs a target",
   "COMBATE.Alvo.clique": "Click the target's token (Esc cancels).",
   "COMBATE.Alvo.cliqueCom": "{nome}: click the target's token (Esc cancels).",
-  "COMBATE.Alvo.marcado": "Target: {nome}"
+  "COMBATE.Alvo.marcado": "Target: {nome}",
+  "COMBATE.Settings.dadosEmCena.Name": "Roll checks in Dados em Cena",
+  "COMBATE.Settings.dadosEmCena.Hint": "If the Dados em Cena module is active, combat checks (Hide, Search, Grapple/Shove and the defender's check) and saving throws against spells and abilities open the Dados em Cena screen so the character's owner rolls. Needs a GM online.",
+  "COMBATE.Dados.semSalvaguarda": "{nome} didn't roll the save against {origem} in time.",
+  "COMBATE.Settings.limparAlvo.Name": "Clear the target after the action",
+  "COMBATE.Settings.limparAlvo.Hint": "In combat, the target is cleared automatically when the action ends (after the damage roll, the attack or the use) and on turn change, so the next action asks for a target again."
 }

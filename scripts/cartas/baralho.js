@@ -6,7 +6,7 @@
 //  sempre reflete o personagem de agora (subiu de nível, ganhou Ataque Extra…).
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { MOD } from "../core.js";
+import { MOD, apagarEfeitos } from "../core.js";
 import { cartasCustom, modoCartasLigado, quantidadesAtores, regras } from "./config.js";
 import { IDS_TIPOS, opcoesHabilidade, quantidadeAuto, textoDoItem } from "./tipos.js";
 
@@ -163,7 +163,7 @@ export async function encerrarDefesas(combatant, combat) {
     const actor = c.actor;
     if (!actor) continue;
     const ids = actor.effects.filter(e => e.getFlag(MOD, "defesaDe") === combatant.id).map(e => e.id);
-    if (ids.length) await actor.deleteEmbeddedDocuments("ActiveEffect", ids);
+    if (ids.length) await apagarEfeitos(actor, ids);
   }
 }
 
