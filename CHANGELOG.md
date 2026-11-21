@@ -2,6 +2,31 @@
 
 > ⚠️ **Beta, em testes:** o Combate da Mesa ainda está sendo testado no Foundry VTT 14 e no D&D 5e 6 e pode ter erros. Teste primeiro num mundo de teste ou faça backup antes de ativar. Bugs e sugestões: https://github.com/Daphenius/combate-mesa/issues
 
+## v0.2.10 (beta)
+
+- **Campo Guardada** ao lado da mão de cartas: botão direito numa carta leva ela para esse campo, e ela volta na sua próxima mão (ocupando um dos espaços). Clique na carta guardada para devolvê-la à mão antes disso. Se já houver uma carta guardada, ela troca de lugar com a nova.
+
+## v0.2.9 (beta)
+
+- **Nova carta Truque:** escolhe um truque da ficha, não gasta nada e volta para a mão depois de usada. A carta Magia agora é só para magias de 1º círculo ou mais.
+- **Esquivar não é mais carta de defesa:** volta a ser uma carta comum (sem campo de Defesa e sem o limite de 1 vez por combate). As cartas de defesa são Defender, Proteger e Resistir.
+- **Habilidades sem limite de usos** também voltam para a mão depois de usadas.
+
+## v0.2.8 (beta)
+
+- **Campo de Reação e campo de Defesa** ao lado da mão de cartas. A carta virada (Armadilha) fica no campo de Reação e dispara sozinha quando você é atacado. As cartas de defesa ficam no campo de Defesa, valem até o início do seu próximo turno e então se desfazem e o efeito acaba.
+- **Novas cartas de defesa:** Defender (+1 na CA), Proteger (+2 na CA de um aliado marcado) e Resistir (vantagem em testes de resistência). Esquivar também virou carta de defesa. Cada carta de defesa só pode ser usada 1 vez por combate; depois disso ela não volta mais na compra.
+- **Magia e Habilidade não acabam à toa:** depois de usadas, essas cartas voltam para a mão enquanto ainda houver espaço de magia ou usos da habilidade. Habilidades sem limite de usos são gastas normalmente.
+- **Descrição nas cartas de habilidade:** a carta mostra o texto da habilidade da ficha (o texto completo aparece ao passar o mouse).
+
+## v0.2.7 (beta)
+
+- **Barra de ações maior e mais legível.** As cartas não ficam mais cortadas (o Foundry dava altura fixa aos botões) e ficaram maiores, com o nome inteiro embaixo. Nova opção **Tamanho da barra de ações** (Normal, Grande ou Enorme), de cada jogador. O padrão agora é Grande.
+- **Magias mais fáceis de achar:** cada círculo ocupa uma linha inteira, com os espaços de magia ao lado do nome, e as abas de armas, magias, habilidades e itens ganharam uma **busca por nome**.
+- **Nova aba Ações bônus:** junta tudo da ficha que gasta Ação Bônus (magias, habilidades, armas e itens) num lugar só.
+- **Barra móvel:** arraste pela alça à esquerda do retrato para levar a barra para onde quiser. A posição fica salva para cada jogador. Clique duas vezes na alça para ela voltar ao canto.
+- **O mestre vê a barra no turno de qualquer combatente,** inclusive dos personagens dos jogadores. Antes ela só aparecia no turno dos NPCs.
+
 ## v0.2.6 (beta)
 
 - **O módulo voltou a carregar (o problema era da v0.2.5).** O arquivo do menu de cartas (`scripts/cartas/menu.js`) foi publicado vazio, e o Foundry parava de carregar o módulo inteiro: o Combate da Mesa não aparecia nas configurações e nada surgia ao iniciar um combate. O menu foi refeito.

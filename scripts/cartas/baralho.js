@@ -8,25 +8,33 @@
 
 import { MOD } from "../core.js";
 import { cartasCustom, modoCartasLigado, quantidadesAtores, regras } from "./config.js";
-import { IDS_TIPOS, opcoesHabilidade, quantidadeAuto } from "./tipos.js";
+import { IDS_TIPOS, opcoesHabilidade, quantidadeAuto, textoDoItem } from "./tipos.js";
 
 export const ESTADO_PADRAO = Object.freeze({
   mao: [],          // [{ uid, tipo, cid? }]
-  guardada: null,   // uid da carta guardada para o próximo turno
+  guardada: null,   // carta no campo "Guardada": volta para a próxima mão
   armadilha: null,  // carta virada na mesa, esperando um ataque
   rodada: null,     // rodada em que a mão foi comprada
   menos: 0,         // cartas a menos na próxima compra (carta −2)
-  mov: 0            // deslocamentos extras ganhos por cartas neste turno
+  mov: 0,           // deslocamentos extras ganhos por cartas neste turno
+  defesa: [],       // cartas de defesa ativas até o início do próximo turno
+  usadas: []        // tipos de defesa já usados neste combate (1 vez cada)
 });
 
 export function estadoCartas(combatant) {
   const f = combatant?.getFlag(MOD, "cartas") ?? {};
-  return { ...ESTADO_PADRAO, ...f, mao: Array.isArray(f.mao) ? f.mao : [] };
+  const lista = v => Array.isArray(v) ? v : [];
+  // a guardada é gravada dentro de uma lista: o Foundry mescla objetos ao atualizar
+  // flags (sobrariam campos da carta anterior), mas troca listas inteiras
+  const guardada = Array.isArray(f.guardada) ? (f.guardada[0] ?? null) : (f.guardada ?? null);
+  return { ...ESTADO_PADRAO, ...f, guardada, mao: lista(f.mao), defesa: lista(f.defesa), usadas: lista(f.usadas) };
 }
 
 export async function salvarCartas(combatant, mudancas) {
   const novo = { ...estadoCartas(combatant), ...mudancas };
-  await combatant.setFlag(MOD, "cartas", novo);
+  const g = novo.guardada;
+  const gravar = { ...novo, guardada: g && typeof g === "object" ? [g] : (typeof g === "string" ? g : []) };
+  await combatant.setFlag(MOD, "cartas", gravar);
   return novo;
 }
 
@@ -60,7 +68,8 @@ function customServe(def, actor) {
 }
 
 // Lista de cartas do baralho (com repetições), sem embaralhar.
-export function composicao(actor) {
+// excluir: tipos que não entram (cartas de defesa já usadas neste combate)
+export function composicao(actor, excluir = []) {
   const todos = quantidadesAtores();
   const proprio = todos[actor.id] ?? {};
   const padrao = todos[actor.type === "character" ? "_pj" : "_npc"] ?? {};
@@ -68,6 +77,7 @@ export function composicao(actor) {
   const add = (n, carta) => { for (let i = 0; i < n; i++) lista.push({ ...carta }); };
 
   for (const tipo of IDS_TIPOS) {
+    if (excluir.includes(tipo)) continue;
     let n = proprio[tipo];
     if (!Number.isFinite(n)) n = padrao[tipo];
     if (!Number.isFinite(n)) n = quantidadeAuto(actor, tipo);
@@ -76,7 +86,7 @@ export function composicao(actor) {
     n = Math.max(0, Math.min(20, Math.floor(n)));
     // Habilidade: n cópias de CADA habilidade da ficha
     if (tipo === "habilidade") {
-      for (const item of opcoesHabilidade(actor)) add(n, { tipo, iid: item.id, nome: item.name, img: item.img });
+      for (const item of opcoesHabilidade(actor)) add(n, { tipo, iid: item.id, nome: item.name, img: item.img, texto: textoDoItem(item) });
     } else add(n, { tipo });
   }
   for (const def of cartasCustom()) {
@@ -102,8 +112,8 @@ const novaCarta = base => ({ ...base, uid: foundry.utils.randomID() });
 // Compra n cartas novas do baralho do personagem.
 // Sem repetir enquanto o baralho tiver cartas; se acabar, embaralha de novo.
 // "repor": a compra extra (+2) sorteia de novo do baralho inteiro, então pode repetir.
-export function comprar(actor, n, { garantirAtacar = false } = {}) {
-  const base = composicao(actor);
+export function comprar(actor, n, { garantirAtacar = false, excluir = [] } = {}) {
+  const base = composicao(actor, excluir);
   if (!base.length || n <= 0) return [];
   const saida = [];
   let monte = embaralhar(base);
@@ -124,12 +134,26 @@ export async function novaMao(combatant, combat) {
   if (!usaCartas(combatant)) return;
   const r = regras();
   const st = estadoCartas(combatant);
-  const guardada = r.guardarCarta && st.guardada ? st.mao.find(c => c.uid === st.guardada) : null;
+  // a carta do campo "Guardada" volta para a mão nova (versões antigas guardavam só o uid)
+  const g = typeof st.guardada === "string" ? st.mao.find(c => c.uid === st.guardada) : st.guardada;
+  const guardada = r.guardarCarta && g?.tipo ? g : null;
   const n = Math.max(0, Math.floor(Number(r.tamanhoMao) || 5) - (guardada ? 1 : 0) - (Number(st.menos) || 0));
-  const compradas = comprar(combatant.actor, n, { garantirAtacar: r.atacarGarantido && !(guardada?.tipo === "atacar") });
+  const compradas = comprar(combatant.actor, n, { garantirAtacar: r.atacarGarantido && !(guardada?.tipo === "atacar"), excluir: st.usadas });
   const mao = guardada ? [guardada, ...compradas] : compradas;
-  await salvarCartas(combatant, { mao, guardada: null, rodada: combat.round, menos: 0, mov: 0 });
+  // as defesas de quem começa o turno se desfazem
+  if (st.defesa.length) await encerrarDefesas(combatant, combat);
+  await salvarCartas(combatant, { mao, guardada: null, rodada: combat.round, menos: 0, mov: 0, defesa: [] });
   return { mao, perdeu: Number(st.menos) || 0 };
+}
+
+// Tira os efeitos das cartas de defesa que este combatente jogou (nele ou em aliados).
+export async function encerrarDefesas(combatant, combat) {
+  for (const c of combat.combatants) {
+    const actor = c.actor;
+    if (!actor) continue;
+    const ids = actor.effects.filter(e => e.getFlag(MOD, "defesaDe") === combatant.id).map(e => e.id);
+    if (ids.length) await actor.deleteEmbeddedDocuments("ActiveEffect", ids);
+  }
 }
 
 export async function tirarDaMao(combatant, uid) {
@@ -138,7 +162,7 @@ export async function tirarDaMao(combatant, uid) {
   if (!carta) return null;
   await salvarCartas(combatant, {
     mao: st.mao.filter(c => c.uid !== uid),
-    guardada: st.guardada === uid ? null : st.guardada
+    guardada: st.guardada === uid ? null : st.guardada // (versões antigas: uid)
   });
   return carta;
 }

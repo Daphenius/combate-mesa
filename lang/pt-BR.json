@@ -140,5 +140,14 @@
   "COMBATE.Settings.tema.Hint": "Claro ou escuro. Em “Acompanhar o Foundry”, segue o esquema de cores da interface escolhido nas configurações do Foundry.",
   "COMBATE.Settings.tema.auto": "Acompanhar o Foundry",
   "COMBATE.Settings.tema.escuro": "Escuro",
-  "COMBATE.Settings.tema.claro": "Claro"
+  "COMBATE.Settings.tema.claro": "Claro",
+  "COMBATE.Settings.tamanhoBarra.Name": "Tamanho da barra de ações",
+  "COMBATE.Settings.tamanhoBarra.Hint": "O tamanho das cartas e da área de cartas da barra. Vale só para você.",
+  "COMBATE.Settings.tamanhoBarra.normal": "Normal",
+  "COMBATE.Settings.tamanhoBarra.grande": "Grande",
+  "COMBATE.Settings.tamanhoBarra.enorme": "Enorme",
+  "COMBATE.Barra.mover": "Arraste para mover a barra. Clique duas vezes para voltar ao canto.",
+  "COMBATE.Barra.buscar": "Buscar pelo nome…",
+  "COMBATE.Aba.bonus": "Ações bônus",
+  "COMBATE.Barra.vazioBonus": "Nada na ficha gasta Ação Bônus."
 }

@@ -12,6 +12,7 @@ import { movimentoExtra, usaCartas } from "./cartas/index.js";
 
 const ABAS = [
   { id: "armas", icone: "fa-solid fa-khanda" },
+  { id: "bonus", icone: "fa-solid fa-play" },
   { id: "magias", icone: "fa-solid fa-hat-wizard" },
   { id: "habilidades", icone: "fa-solid fa-star" },
   { id: "itens", icone: "fa-solid fa-flask" },
@@ -69,16 +70,87 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(options) {
     super(options);
     this.agendar = debounceRender(this);
+    this.filtro = ""; // busca por nome (magias, itens…), guardada entre redesenhos
+  }
+
+  // ───────────────────────── Posição (arrastar) ─────────────────────────
+
+  // Põe a barra onde o jogador deixou (âncora embaixo, para crescer para cima).
+  #aplicarPosicao() {
+    const el = this.element;
+    const pos = cfg("posicaoBarra") ?? {};
+    if (!Number.isFinite(pos.left) || !Number.isFinite(pos.bottom)) {
+      el.style.left = el.style.bottom = el.style.top = "";
+      return;
+    }
+    const r = el.getBoundingClientRect();
+    const left = Math.max(0, Math.min(pos.left, window.innerWidth - Math.min(r.width || 200, window.innerWidth)));
+    const bottom = Math.max(0, Math.min(pos.bottom, window.innerHeight - 60));
+    el.style.left = `${left}px`;
+    el.style.bottom = `${bottom}px`;
+    el.style.top = "auto";
+  }
+
+  #instalarArrasto(alca) {
+    alca.addEventListener("dblclick", () => game.settings.set(MOD, "posicaoBarra", {}).then(() => this.#aplicarPosicao()));
+    alca.addEventListener("pointerdown", ev => {
+      if (ev.button !== 0) return;
+      ev.preventDefault();
+      const el = this.element;
+      const r = el.getBoundingClientRect();
+      const dx = ev.clientX - r.left, dy = r.bottom - ev.clientY;
+      alca.setPointerCapture(ev.pointerId);
+      el.classList.add("arrastando");
+      const mover = e => {
+        el.style.left = `${Math.max(0, Math.min(e.clientX - dx, window.innerWidth - r.width))}px`;
+        el.style.bottom = `${Math.max(0, Math.min(window.innerHeight - e.clientY - dy, window.innerHeight - 60))}px`;
+        el.style.top = "auto";
+      };
+      const soltar = () => {
+        alca.removeEventListener("pointermove", mover);
+        el.classList.remove("arrastando");
+        game.settings.set(MOD, "posicaoBarra", { left: parseFloat(el.style.left) || 0, bottom: parseFloat(el.style.bottom) || 0 });
+      };
+      alca.addEventListener("pointermove", mover);
+      alca.addEventListener("pointerup", soltar, { once: true });
+      alca.addEventListener("pointercancel", soltar, { once: true });
+    });
+  }
+
+  // Busca: esconde as cartas que não batem com o texto, sem redesenhar
+  #filtrar() {
+    const termo = this.filtro.trim().toLowerCase();
+    for (const carta of this.element.querySelectorAll(".cmb-cartas .cmb-carta")) {
+      const nome = carta.querySelector(".cmb-carta-nome")?.textContent.toLowerCase() ?? "";
+      carta.hidden = !!termo && !nome.includes(termo);
+    }
+    for (const grupo of this.element.querySelectorAll(".cmb-grupo")) {
+      grupo.hidden = !grupo.querySelector(".cmb-carta:not([hidden])");
+    }
+  }
+
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    this.#aplicarPosicao();
+    const alca = this.element.querySelector(".cmb-barra-alca");
+    if (alca) this.#instalarArrasto(alca);
+    const busca = this.element.querySelector(".cmb-busca input");
+    if (busca) {
+      busca.addEventListener("input", () => { this.filtro = busca.value; this.#filtrar(); });
+      busca.addEventListener("keydown", ev => ev.stopPropagation()); // não aciona atalhos do Foundry
+      if (this.filtro) this.#filtrar();
+    }
   }
 
   // Quem a barra mostra:
-  // mestre → o combatente da vez, se não for de um jogador (os NPCs dele);
+  // mestre → o combatente da vez (NPC ou personagem de jogador);
   // jogador → o da vez, se for dele; senão o token dele selecionado; senão o primeiro dele no combate.
   alvo() {
     const combat = combateAtivo();
     if (!combat) return null;
     const atual = combat.combatant;
-    if (game.user.isGM) return atual?.actor && !atual.hasPlayerOwner ? atual : null;
+    // mestre: sempre o combatente da vez, seja NPC ou personagem de jogador
+    if (game.user.isGM) return atual?.actor ? atual : null;
     if (atual?.isOwner && atual.actor) return atual;
     const meus = combat.combatants.filter(c => c.isOwner && c.actor && !c.isDefeated);
     const controlados = new Set(canvas.tokens?.controlled.map(t => t.id) ?? []);
@@ -103,7 +175,11 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
       if (!temAtividade(item)) continue;
       const t = item.type;
       let entra = false;
-      if (aba === "armas") entra = t === "weapon" && (item.system.equipped || actor.type !== "character");
+      // Ações bônus: tudo que gasta Ação Bônus, de qualquer tipo (magias, habilidades, armas, itens)
+      if (aba === "bonus") entra = seloDoItem(item) === "bonus"
+        && (t !== "spell" || magiaDisponivel(item))
+        && (t !== "weapon" || item.system.equipped || actor.type !== "character");
+      else if (aba === "armas") entra = t === "weapon" && (item.system.equipped || actor.type !== "character");
       else if (aba === "magias") entra = t === "spell" && magiaDisponivel(item);
       else if (aba === "habilidades") entra = t === "feat";
       else if (aba === "itens") entra = ["consumable", "equipment", "tool", "loot"].includes(t);
@@ -184,6 +260,9 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
 
     return {
       modoCartas,
+      tamanho: ["normal", "grande", "enorme"].includes(cfg("tamanhoBarra")) ? cfg("tamanhoBarra") : "grande",
+      busca: !modoCartas && aba !== "basicas",
+      filtro: this.filtro,
       minimizada: !!cfg("barraMinimizada"),
       nome: c.name,
       img: imagemDe(c),
@@ -219,6 +298,7 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #aba(event, target) {
+    this.filtro = "";
     await game.settings.set(MOD, "aba", target.dataset.aba);
     this.render();
   }

@@ -15,8 +15,23 @@
     {{#if vaziaMao}}<p class="cmb-mao-vazia">{{localize "COMBATE.Cartas.mao.vazia"}}</p>{{/if}}
   </div>
 
-  {{#if armadilha}}
-  <div class="cmb-mao-armadilha" data-tooltip="{{localize 'COMBATE.Cartas.mao.armadilha'}}">{{{armadilhaHTML}}}</div>
-  {{/if}}
+  <div class="cmb-mao-zonas">
+    {{#if guardar}}
+    <div class="cmb-zona guardada">
+      <span class="cmb-zona-rotulo" data-tooltip="{{localize 'COMBATE.Cartas.mao.zonaGuardadaDica'}}"><i class="fa-solid fa-bookmark"></i> {{localize "COMBATE.Cartas.mao.zonaGuardada"}}</span>
+      <div class="cmb-zona-slot">{{#if guardadaHTML}}<span class="cmb-zona-carta" data-tooltip="{{guardadaDica}}">{{{guardadaHTML}}}</span>{{else}}<span class="cmb-zona-vazia" data-tooltip="{{guardadaDica}}"></span>{{/if}}</div>
+    </div>
+    {{/if}}
+    <div class="cmb-zona reacao" data-tooltip="{{localize 'COMBATE.Cartas.mao.zonaReacaoDica'}}">
+      <span class="cmb-zona-rotulo"><i class="fa-solid fa-rotate-left"></i> {{localize "COMBATE.Cartas.mao.zonaReacao"}}</span>
+      <div class="cmb-zona-slot">{{#if armadilhaHTML}}{{{armadilhaHTML}}}{{else}}<span class="cmb-zona-vazia"></span>{{/if}}</div>
+    </div>
+    <div class="cmb-zona defesa">
+      <span class="cmb-zona-rotulo" data-tooltip="{{localize 'COMBATE.Cartas.mao.zonaDefesaDica'}}"><i class="fa-solid fa-shield-halved"></i> {{localize "COMBATE.Cartas.mao.zonaDefesa"}}</span>
+      <div class="cmb-zona-slot">
+        {{#each defesas}}<span class="cmb-zona-carta" data-tooltip="{{dica}}">{{{html}}}</span>{{else}}<span class="cmb-zona-vazia" data-tooltip="{{localize 'COMBATE.Cartas.mao.zonaDefesaDica'}}"></span>{{/each}}
+      </div>
+    </div>
+  </div>
   {{/unless}}
 </div>

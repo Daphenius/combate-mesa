@@ -11,7 +11,7 @@
 import { MOD, combateAtivo, esc, isActiveGM, loc, tokenNoMapa } from "../core.js";
 import { cartasCustom, regras } from "./config.js";
 import { comprar, estadoCartas, salvarCartas, tirarDaMao, usaCartas } from "./baralho.js";
-import { infoCarta, itemFormaSelvagem, opcoesAtaque, opcoesItem, opcoesMagia } from "./tipos.js";
+import { infoCarta, itemFormaSelvagem, opcoesAtaque, opcoesItem, opcoesMagia, ehDefesa } from "./tipos.js";
 import { cartaHTML } from "./visual.js";
 
 const { DialogV2 } = foundry.applications.api;
@@ -69,10 +69,11 @@ async function escolherAtaque(actor) {
   return escolher(loc("COMBATE.Cartas.escolher.ataque"), ops);
 }
 
-async function escolherMagia(actor) {
-  const magias = opcoesMagia(actor).sort((a, b) => (a.system.level - b.system.level) || a.name.localeCompare(b.name));
-  if (!magias.length) { ui.notifications.warn(loc("COMBATE.Cartas.aviso.semMagia")); return null; }
-  return escolher(loc("COMBATE.Cartas.escolher.magia"), magias.map(i => ({
+async function escolherMagia(actor, filtro) {
+  const magias = opcoesMagia(actor, filtro).sort((a, b) => (a.system.level - b.system.level) || a.name.localeCompare(b.name));
+  const truque = filtro?.circulos === false;
+  if (!magias.length) { ui.notifications.warn(loc(truque ? "COMBATE.Cartas.aviso.semTruque" : "COMBATE.Cartas.aviso.semMagia")); return null; }
+  return escolher(loc(truque ? "COMBATE.Cartas.escolher.truque" : "COMBATE.Cartas.escolher.magia"), magias.map(i => ({
     valor: i, img: i.img, nome: i.name, grupo: rotuloCirculo(i.system.level ?? 0)
   })));
 }
@@ -111,7 +112,14 @@ const EFEITOS = {
 
   // gasta o espaço de magia normalmente (o dnd5e cuida)
   async magia({ actor, event }) {
-    const item = await escolherMagia(actor);
+    const item = await escolherMagia(actor, { truques: false });
+    if (!item) return { ok: false };
+    return { ok: usou(await item.use({ event })) };
+  },
+
+  // Truques: não gastam nada, então a carta sempre volta para a mão
+  async truque({ actor, event }) {
+    const item = await escolherMagia(actor, { circulos: false });
     if (!item) return { ok: false };
     return { ok: usou(await item.use({ event })) };
   },
@@ -152,10 +160,34 @@ const EFEITOS = {
     return { ok: usou(await item.use({ event, consume: { resources: false } })) };
   },
 
+  // ── Defesas: duram até o início do próximo turno de quem jogou ──
   async esquivar({ actor, combatant }) {
     await actor.toggleStatusEffect("dodging", { active: true });
     await combatant.setFlag(MOD, "esquivou", true); // a economia tira no início do próximo turno
     return { ok: true };
+  },
+
+  async defender({ actor, combatant }) {
+    await criarDefesa(actor, combatant, "defender", [{ key: "system.attributes.ac.bonus", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "+1" }]);
+    return { ok: true, defesa: true };
+  },
+
+  async resistir({ actor, combatant }) {
+    const changes = ["str", "dex", "con", "int", "wis", "cha"].map(a => ({
+      key: `system.abilities.${a}.save.roll.mode`, mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "1"
+    }));
+    await criarDefesa(actor, combatant, "resistir", changes);
+    return { ok: true, defesa: true };
+  },
+
+  // +2 na CA de um aliado marcado (o mestre aplica, porque o aliado é de outro jogador)
+  async proteger({ combatant }) {
+    const alvo = game.user.targets.first();
+    if (!alvo?.actor || alvo.actor.uuid === combatant.actor?.uuid) {
+      ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueProteger"));
+      return { ok: false };
+    }
+    return { ok: true, defesa: true, acao: { tipo: "proteger", alvo: alvo.actor.uuid }, extra: alvo.name };
   },
 
   async ajudar({ combatant }) {
@@ -190,8 +222,8 @@ const EFEITOS = {
   },
 
   async mais2({ actor, combatant }) {
-    const extras = comprar(actor, 2);
     const st = estadoCartas(combatant);
+    const extras = comprar(actor, 2, { excluir: st.usadas });
     await salvarCartas(combatant, { mao: [...st.mao, ...extras] });
     return { ok: true };
   },
@@ -249,6 +281,35 @@ async function rodarMacro(macro, { actor, combatant, token, carta, alvos, usuari
   }
 }
 
+// Active Effect de uma carta de defesa, marcado com quem jogou (para sair no próximo turno dele)
+async function criarDefesa(actor, combatant, tipo, changes) {
+  return actor.createEmbeddedDocuments("ActiveEffect", [{
+    name: loc(`COMBATE.Cartas.tipo.${tipo}.nome`),
+    img: tipo === "proteger" ? "icons/svg/shield.svg" : tipo === "resistir" ? "icons/svg/aura.svg" : "icons/svg/shield.svg",
+    description: loc(`COMBATE.Cartas.tipo.${tipo}.texto`),
+    changes,
+    duration: { rounds: 1 },
+    flags: { [MOD]: { defesaDe: combatant.id } }
+  }]);
+}
+
+// A carta volta para a mão depois de usada? Truque sempre; Magia enquanto houver
+// espaço de magia; Habilidade enquanto houver usos (sem limite de usos, sempre).
+function aindaTemRecurso(actor, carta) {
+  if (carta.tipo === "truque") return true;
+  if (carta.tipo === "magia") {
+    const sp = actor.system?.spells ?? {};
+    return Object.values(sp).some(s => (Number(s?.max) || 0) > 0 && (Number(s?.value) || 0) > 0);
+  }
+  if (carta.tipo === "habilidade") {
+    const item = actor.items.get(carta.iid);
+    if (!item) return false;
+    const u = item.system?.uses;
+    return !u?.max || (Number(u.value) || 0) > 0;
+  }
+  return false;
+}
+
 // ───────────────────────── Jogar uma carta ─────────────────────────
 
 export function podeJogar(combatant) {
@@ -269,6 +330,10 @@ export async function jogarCarta(combatant, uid, event) {
 
   const efeito = EFEITOS[carta.tipo];
   if (!efeito) return;
+  if (ehDefesa(carta.tipo) && estadoCartas(combatant).usadas.includes(carta.tipo)) {
+    ui.notifications.warn(loc("COMBATE.Cartas.aviso.defesaUsada"));
+    return;
+  }
   // tira da mão antes, para não jogar a mesma carta duas vezes com cliques rápidos
   if (!(await tirarDaMao(combatant, uid))) return;
   let res;
@@ -282,6 +347,14 @@ export async function jogarCarta(combatant, uid, event) {
     const st = estadoCartas(combatant);
     if (!st.mao.some(c => c.uid === uid)) await salvarCartas(combatant, { mao: [...st.mao, carta] });
     return;
+  }
+  const st = estadoCartas(combatant);
+  if (res.defesa) {
+    // vai para o campo de defesa e não volta mais neste combate
+    await salvarCartas(combatant, { defesa: [...st.defesa, { ...carta, alvo: res.extra ?? null }], usadas: [...new Set([...st.usadas, carta.tipo])] });
+  } else if (aindaTemRecurso(actor, carta) && !st.mao.some(c => c.uid === uid)) {
+    // Magia/Habilidade com recurso sobrando: a carta continua na mão
+    await salvarCartas(combatant, { mao: [...st.mao, carta] });
   }
   await anunciarCarta(combatant, carta, res);
 }
@@ -297,7 +370,7 @@ export async function anunciarCarta(combatant, carta, { oculta = false, acao = n
   return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: combatant.actor, token: combatant.token }),
     content,
-    flags: { [MOD]: { carta: { tipo: carta.tipo, cid: carta.cid ?? null, iid: carta.iid ?? null, nome: carta.nome ?? null, img: carta.img ?? null }, oculta, acao, combatant: combatant.id } }
+    flags: { [MOD]: { carta: { tipo: carta.tipo, cid: carta.cid ?? null, iid: carta.iid ?? null, nome: carta.nome ?? null, img: carta.img ?? null, texto: carta.texto ?? null }, oculta, acao, combatant: combatant.id } }
   });
 }
 
@@ -342,6 +415,12 @@ export async function executarPedido(message) {
   const combat = combateAtivo();
   try {
     switch (dados.tipo) {
+      case "proteger": {
+        const actor = await fromUuid(dados.alvo);
+        const c = combat?.combatants.get(message.getFlag(MOD, "combatant"));
+        if (actor && c) await criarDefesa(actor, c, "proteger", [{ key: "system.attributes.ac.bonus", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "+2" }]);
+        break;
+      }
       case "menos2": {
         const alvo = combat?.combatants.get(dados.alvo);
         if (alvo) await salvarCartas(alvo, { menos: (Number(estadoCartas(alvo).menos) || 0) + 2 });

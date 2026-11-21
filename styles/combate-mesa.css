@@ -230,6 +230,45 @@ body.cmb-claro {
 
 #cmb-barra-acoes:has(.minimizada) { width: auto; }
 
+/* ── Tamanhos (configuração "Tamanho da barra de ações", de cada jogador) ── */
+.cmb-barra { --cmb-c-w: 72px; --cmb-c-arte: 56px; --cmb-c-fs: 11px; --cmb-area: 230px; }
+.cmb-barra.tam-grande { --cmb-c-w: 86px; --cmb-c-arte: 68px; --cmb-c-fs: 12px; --cmb-area: 320px; }
+.cmb-barra.tam-enorme { --cmb-c-w: 104px; --cmb-c-arte: 84px; --cmb-c-fs: 13px; --cmb-area: 420px; }
+#cmb-barra-acoes:has(.tam-normal) { width: min(780px, calc(100vw - 120px)); }
+#cmb-barra-acoes:has(.tam-grande) { width: min(940px, calc(100vw - 120px)); }
+#cmb-barra-acoes:has(.tam-enorme) { width: min(1120px, calc(100vw - 100px)); }
+#cmb-barra-acoes:has(.minimizada), #cmb-barra-acoes:has(.cmb-modo-cartas) { width: auto; }
+
+/* o Foundry dá altura fixa aos botões: as cartas precisam de altura livre */
+.cmb-barra .cmb-carta { width: var(--cmb-c-w); height: auto; min-height: 0; gap: 6px; }
+.cmb-barra .cmb-carta-arte { width: var(--cmb-c-arte); height: var(--cmb-c-arte); flex: 0 0 auto; }
+.cmb-barra .cmb-carta-icone { font-size: calc(var(--cmb-c-arte) * .4); }
+.cmb-barra .cmb-carta-nome { font-size: var(--cmb-c-fs); line-height: 1.2; min-height: calc(var(--cmb-c-fs) * 2.4); }
+.cmb-barra .cmb-carta-usos { font-size: calc(var(--cmb-c-fs) - 1px); }
+.cmb-barra .cmb-cartas { max-height: var(--cmb-area); padding: 12px; gap: 10px 8px; }
+.cmb-barra .cmb-abas button { height: 30px; }
+.cmb-barra .cmb-abas button span { display: inline; }
+.cmb-barra.tam-normal .cmb-abas button:not(.ativa) span { display: none; }
+
+/* magias: cada círculo numa linha inteira, com os espaços de magia ao lado do nome */
+.cmb-cartas.aba-magias { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+.cmb-cartas.aba-magias .cmb-grupo { border-right: none; padding: 0 0 8px; border-bottom: 1px solid var(--cmb-linha); }
+.cmb-cartas.aba-magias .cmb-grupo:last-child { border-bottom: none; }
+.cmb-cartas.aba-magias .cmb-grupo-rotulo { font-size: 11px; color: var(--cmt-acento-texto); }
+.cmb-espacos i { width: 9px; height: 9px; }
+
+/* busca por nome */
+.cmb-busca { display: flex; align-items: center; gap: 8px; margin: 8px 12px 0; padding: 0 10px; height: 30px; border-radius: 8px; background: var(--cmt-hover); color: var(--cmb-suave); border: 1px solid var(--cmb-linha); }
+.cmb-busca input { flex: 1; height: 100%; border: none; background: transparent; color: var(--cmb-texto); font-size: 12.5px; box-shadow: none; outline: none; }
+.cmb-busca input:focus { box-shadow: none; }
+.cmb-barra .cmb-carta[hidden], .cmb-grupo[hidden] { display: none; }
+
+/* alça para arrastar */
+.cmb-barra-alca { display: grid; place-items: center; width: 16px; height: 36px; margin-right: -4px; color: var(--cmb-suave); cursor: grab; touch-action: none; border-radius: 6px; }
+.cmb-barra-alca:hover { color: var(--cmt-acento-texto); background: var(--cmt-hover); }
+#cmb-barra-acoes.arrastando { opacity: .9; }
+#cmb-barra-acoes.arrastando .cmb-barra-alca { cursor: grabbing; }
+
 /* abre espaço no canto inferior durante o combate */
 body.cmb-sem-hotbar #hotbar,
 body.cmb-sem-hotbar #players { visibility: hidden; }

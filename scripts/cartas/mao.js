@@ -56,7 +56,7 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
       const desce = Math.abs(i - meio) * Math.abs(i - meio) * 2.5;
       return {
         uid: carta.uid,
-        html: cartaHTML(info, { classes: st.guardada === carta.uid ? "guardada" : "" }),
+        html: cartaHTML(info),
         dica: `<strong>${foundry.utils.escapeHTML(info.nome)}</strong><br>${foundry.utils.escapeHTML(info.descricao)}`,
         estilo: `--ang:${ang}deg; --desce:${desce}px;`
       };
@@ -66,32 +66,55 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
       cartas,
       vaziaMao: !n,
       pode,
-      monte: composicao(c.actor).length,
-      armadilha: !!st.armadilha,
+      monte: composicao(c.actor, st.usadas).length,
       armadilhaHTML: st.armadilha ? cartaHTML(infoCarta(st.armadilha), { mini: true, oculta: true }) : "",
+      defesas: st.defesa.map(d => {
+        const info = infoCarta(d);
+        const esc = foundry.utils.escapeHTML;
+        return {
+          html: cartaHTML(info, { mini: true }),
+          dica: `<strong>${esc(info.nome)}</strong>${d.alvo ? ` → ${esc(d.alvo)}` : ""}<br>${esc(info.descricao)}<br><em>${esc(loc("COMBATE.Cartas.mao.ateTurno"))}</em>`
+        };
+      }),
       menos: Number(st.menos) || 0,
       mov: Number(st.mov) || 0,
       guardar: r.guardarCarta,
+      guardadaHTML: st.guardada?.tipo ? cartaHTML(infoCarta(st.guardada), { mini: true }) : "",
+      guardadaDica: st.guardada?.tipo ? `<strong>${foundry.utils.escapeHTML(infoCarta(st.guardada).nome)}</strong><br>${foundry.utils.escapeHTML(loc("COMBATE.Cartas.mao.guardadaVolta"))}` : loc("COMBATE.Cartas.mao.zonaGuardadaDica"),
       dicaGuardar: loc("COMBATE.Cartas.mao.dicaGuardar")
     };
   }
 
   _onRender(context, options) {
     super._onRender?.(context, options);
-    // botão direito: guardar/soltar a carta para o próximo turno
+    // botão direito numa carta da mão: vai para o campo "Guardada"
     this.element.querySelectorAll(".cmb-mao-carta").forEach(el => {
       el.addEventListener("contextmenu", ev => {
         ev.preventDefault();
         this.#guardar(el.dataset.uid);
       });
     });
+    // clique na carta guardada: volta para a mão
+    this.element.querySelector(".cmb-zona.guardada .cmb-zona-carta")?.addEventListener("click", () => this.#devolver());
   }
 
+  // Leva a carta para o campo "Guardada" (se já tinha uma, a antiga volta para a mão)
   async #guardar(uid) {
     const c = this.alvo();
     if (!c?.isOwner || !regras().guardarCarta) return;
     const st = estadoCartas(c);
-    await salvarCartas(c, { guardada: st.guardada === uid ? null : uid });
+    const carta = st.mao.find(x => x.uid === uid);
+    if (!carta) return;
+    const antiga = st.guardada?.tipo ? [st.guardada] : [];
+    await salvarCartas(c, { mao: [...st.mao.filter(x => x.uid !== uid), ...antiga], guardada: carta });
+  }
+
+  async #devolver() {
+    const c = this.alvo();
+    if (!c?.isOwner) return;
+    const st = estadoCartas(c);
+    if (!st.guardada?.tipo) return;
+    await salvarCartas(c, { mao: [...st.mao, st.guardada], guardada: null });
   }
 
   static async #jogar(event, target) {

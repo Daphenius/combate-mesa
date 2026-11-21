@@ -140,5 +140,14 @@
   "COMBATE.Settings.tema.Hint": "Light or dark. “Follow Foundry” uses the interface color scheme chosen in Foundry's settings.",
   "COMBATE.Settings.tema.auto": "Follow Foundry",
   "COMBATE.Settings.tema.escuro": "Dark",
-  "COMBATE.Settings.tema.claro": "Light"
+  "COMBATE.Settings.tema.claro": "Light",
+  "COMBATE.Settings.tamanhoBarra.Name": "Action bar size",
+  "COMBATE.Settings.tamanhoBarra.Hint": "Size of the cards and card area in the action bar. Only for you.",
+  "COMBATE.Settings.tamanhoBarra.normal": "Normal",
+  "COMBATE.Settings.tamanhoBarra.grande": "Large",
+  "COMBATE.Settings.tamanhoBarra.enorme": "Huge",
+  "COMBATE.Barra.mover": "Drag to move the bar. Double-click to send it back to the corner.",
+  "COMBATE.Barra.buscar": "Search by name…",
+  "COMBATE.Aba.bonus": "Bonus actions",
+  "COMBATE.Barra.vazioBonus": "Nothing on the sheet uses a Bonus Action."
 }

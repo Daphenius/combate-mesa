@@ -1,6 +1,7 @@
-<div class="cmb-barra {{#if minimizada}}minimizada{{/if}} {{#if seuTurno}}seu-turno{{/if}} {{#if modoCartas}}cmb-modo-cartas{{/if}}">
+<div class="cmb-barra tam-{{tamanho}} {{#if minimizada}}minimizada{{/if}} {{#if seuTurno}}seu-turno{{/if}} {{#if modoCartas}}cmb-modo-cartas{{/if}}">
   {{#unless vazio}}
   <header class="cmb-barra-topo">
+    <span class="cmb-barra-alca" data-tooltip="{{localize 'COMBATE.Barra.mover'}}"><i class="fa-solid fa-grip-vertical"></i></span>
     <a class="cmb-barra-retrato" data-action="abrirFicha" data-tooltip="{{localize 'COMBATE.Barra.ficha'}}"><img src="{{img}}" alt=""></a>
     <div class="cmb-barra-nome">
       <strong>{{nome}}</strong>
@@ -43,7 +44,13 @@
     {{/each}}
   </nav>
 
-  <div class="cmb-cartas">
+  {{#if busca}}
+  <label class="cmb-busca">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="search" value="{{filtro}}" placeholder="{{localize 'COMBATE.Barra.buscar'}}" autocomplete="off">
+  </label>
+  {{/if}}
+  <div class="cmb-cartas aba-{{aba}}">
     {{#if basicas}}
       {{#each basicas}}
       <button type="button" class="cmb-carta basica {{#if esgotado}}esgotado{{/if}}" data-action="usarBasica" data-acao="{{id}}" data-tooltip="{{dica}}">
@@ -63,7 +70,7 @@
       {{/each}}
     {{else}}
       {{#each cartas}}{{> "modules/combate-mesa/templates/carta.hbs" this}}{{/each}}
-      {{#if vazioAba}}<p class="cmb-vazio">{{localize "COMBATE.Barra.vazio"}}</p>{{/if}}
+      {{#if vazioAba}}<p class="cmb-vazio">{{#if (eq aba "bonus")}}{{localize "COMBATE.Barra.vazioBonus"}}{{else}}{{localize "COMBATE.Barra.vazio"}}{{/if}}</p>{{/if}}
     {{/if}}
   </div>
   {{/unless}}{{/unless}}

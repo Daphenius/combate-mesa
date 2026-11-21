@@ -102,16 +102,24 @@
 .cmb-mao-carta:hover, .cmb-mao-carta:focus-visible { transform: rotate(0deg) translateY(-34px) scale(1.18); z-index: 5; }
 .cmb-mao-carta:hover .cmb-c { box-shadow: 0 0 14px 3px rgba(240, 212, 138, .75), 0 6px 14px rgba(0, 0, 0, .6); }
 .cmb-mao.bloqueada .cmb-mao-carta { filter: saturate(.55) brightness(.8); cursor: default; }
-.cmb-c.guardada { outline: 3px solid var(--cmb-latao-claro); outline-offset: -3px; }
-.cmb-c.guardada::after {
-  content: "\f02e"; font-family: "Font Awesome 6 Pro", "Font Awesome 6 Free"; font-weight: 900;
-  position: absolute; top: -2px; right: 6px; font-size: 18px; color: var(--cmb-latao-claro); text-shadow: 0 0 3px #000;
-}
 .cmb-mao-vazia {
   pointer-events: auto; margin: 0; padding: 8px 14px; border-radius: 8px; background: var(--cmt-fundo-hud);
   color: var(--cmt-suave); border: 1px dashed var(--cmt-borda); font-style: italic; backdrop-filter: blur(6px);
 }
-.cmb-mao-armadilha { pointer-events: auto; align-self: center; transform: rotate(90deg); margin: 0 18px 40px; }
+/* zonas ao lado da mão: Reação (carta virada) e Defesa (ativas até o seu próximo turno) */
+.cmb-mao-zonas { pointer-events: auto; display: flex; gap: 8px; margin-bottom: 40px; padding: 6px 8px; border-radius: 10px; background: var(--cmt-fundo-hud); border: 1px solid var(--cmt-borda); backdrop-filter: blur(6px); box-shadow: var(--cmt-sombra); }
+.cmb-zona { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.cmb-zona-rotulo { font-size: 10px; letter-spacing: .5px; text-transform: uppercase; color: var(--cmt-suave); white-space: nowrap; }
+.cmb-zona.reacao .cmb-zona-rotulo i { color: var(--cmb-reacao, #a47fe0); }
+.cmb-zona.defesa .cmb-zona-rotulo i { color: var(--cmb-c-defesa); }
+.cmb-zona-slot { display: flex; gap: 4px; min-height: 102px; align-items: center; }
+.cmb-zona-vazia { display: block; width: 70px; aspect-ratio: 59 / 86; border-radius: 7px; border: 2px dashed var(--cmt-borda); background: var(--cmt-hover); }
+.cmb-zona.reacao .cmb-c.verso { box-shadow: 0 0 10px 2px rgba(164, 127, 224, .55); }
+.cmb-zona.defesa .cmb-c { box-shadow: 0 0 10px 2px rgba(91, 143, 69, .6); }
+.cmb-zona-carta { display: block; }
+.cmb-zona.guardada .cmb-zona-rotulo i { color: var(--cmt-acento-texto); }
+.cmb-zona.guardada .cmb-zona-carta { cursor: pointer; }
+.cmb-zona.guardada .cmb-c { box-shadow: 0 0 10px 2px rgba(240, 212, 138, .55); }
 
 /* a barra de ações fica só com o cabeçalho no modo de cartas */
 #cmb-barra-acoes:has(.cmb-modo-cartas) { width: auto; }

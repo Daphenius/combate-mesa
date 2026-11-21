@@ -13,7 +13,7 @@ Se encontrar bugs ou tiver sugestões, abra uma issue. Todo retorno é bem-vindo
 > [!WARNING]
 > **Versão beta, em testes.** Este módulo ainda está sendo testado no Foundry VTT 14 com o sistema D&D 5e 6 e **pode ter erros**. Use primeiro num mundo de teste ou faça backup do seu mundo antes de ativar. Se algo der errado, abra uma [issue](https://github.com/Daphenius/combate-mesa/issues) com um print do console (F12).
 
-**Versão 0.2.5 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
+**Versão 0.2.10 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
 
 ![Combate da Mesa](<docs/barra-e-linha-do-tempo.png>)
 
@@ -75,11 +75,13 @@ As animações ficam mais leves com o modo de desempenho "Baixo" do Foundry ou c
 
 Ligue em **Combate com cartas**, na seção **Cartas** do painel. No início do seu turno você compra uma mão nova (5 cartas por padrão) e age jogando cartas: cada carta faz a ação na hora, sem gastar Ação ou Ação Bônus. Espaços de magia, munição e usos continuam sendo gastos normalmente.
 
-- **Clique** numa carta para jogar. **Botão direito** guarda a carta para o próximo turno (se a regra estiver ligada).
+- **Clique** numa carta para jogar. **Botão direito** leva a carta para o campo **Guardada**, e ela volta na sua próxima mão (se a regra estiver ligada).
 - **Atacar, Magia e Item** abrem a escolha da arma, magia ou item e usam o próprio dnd5e.
 - **Ajudar, Agarrar/Empurrar e Corte −2** usam o alvo marcado. Sem alvo, o Corte −2 vai para o próximo da ordem.
 - **Armadilha** fica virada ao lado da mão. Quando alguém te ataca, ela dispara e abre o seu contra-ataque.
 - **Compre +2** compra 2 cartas aleatórias na hora, então dá para ter várias iguais.
+- **Cartas de defesa** (Defender, Proteger, Resistir) vão para o campo de Defesa ao lado da mão e valem até o início do seu próximo turno. Cada uma só pode ser usada 1 vez por combate.
+- **Truque** e **Habilidade** voltam para a mão depois de usadas (Habilidade só enquanto tiver usos, se tiver limite). **Magia** volta enquanto houver espaço de magia.
 - **Habilidades da ficha** (Cura pelas Mãos, Retomar o Fôlego, Inspiração de Bardo…) viram cartas próprias, com o nome e o ícone da habilidade, e gastam os usos normalmente.
 
 No menu **Cartas de combate** (Configurar Módulos), o mestre ajusta quantas cartas de cada tipo cada personagem tem (em branco = automático pela ficha) e cria **cartas personalizadas**. Uma carta de macro recebe `actor`, `token`, `combatant`, `carta`, `alvos` e `usuario`:

@@ -11,11 +11,16 @@ import { cartasCustom } from "./config.js";
 export const TIPOS = {
   atacar:      { icone: "fa-solid fa-khanda",            categoria: "ataque" },
   magia:       { icone: "fa-solid fa-hat-wizard",        categoria: "magia" },
+  truque:      { icone: "fa-solid fa-wand-sparkles",     categoria: "magia" },
   item:        { icone: "fa-solid fa-flask",             categoria: "tatica" },
   mover:       { icone: "fa-solid fa-shoe-prints",       categoria: "movimento" },
   esconder:    { icone: "fa-solid fa-user-ninja",        categoria: "tatica" },
   transformar: { icone: "fa-solid fa-paw",               categoria: "especial" },
   esquivar:    { icone: "fa-solid fa-shield-halved",     categoria: "defesa" },
+  // campo: vai para o campo de Defesa (até o próximo turno, 1 vez por combate)
+  defender:    { icone: "fa-solid fa-shield",            categoria: "defesa", campo: true },
+  proteger:    { icone: "fa-solid fa-people-arrows",     categoria: "defesa", campo: true },
+  resistir:    { icone: "fa-solid fa-mountain",          categoria: "defesa", campo: true },
   disparada:   { icone: "fa-solid fa-person-running",    categoria: "movimento" },
   ajudar:      { icone: "fa-solid fa-handshake-angle",   categoria: "tatica" },
   agarrar:     { icone: "fa-solid fa-hand-fist",         categoria: "ataque" },
@@ -27,6 +32,22 @@ export const TIPOS = {
 };
 
 export const IDS_TIPOS = Object.keys(TIPOS);
+
+// Cartas de defesa: ficam no campo de defesa até o início do próximo turno de
+// quem jogou, e cada uma só pode ser usada 1 vez por combate.
+export const ehDefesa = tipo => !!TIPOS[tipo]?.campo;
+
+// Texto puro da descrição de um item (sem HTML nem códigos de rolagem/link)
+export function textoDoItem(item, max = 240) {
+  let t = String(item?.system?.description?.value ?? "");
+  t = t.replace(/@\w+\[[^\]]*\]\{([^}]*)\}/g, "$1")   // @UUID[...]{Nome} → Nome
+    .replace(/@\w+\[[^\]]*\]/g, "")                    // @Embed[...] → nada
+    .replace(/\[\[\/?\w*\s*([^\]]*)\]\]/g, "$1")         // [[/r 1d6]] → 1d6
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ").trim();
+  return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t;
+}
 
 // ───────────────────────── Leitura da ficha ─────────────────────────
 
@@ -51,8 +72,9 @@ export function opcoesAtaque(actor) {
   return lista;
 }
 
-export function opcoesMagia(actor) {
-  return (actor?.items ?? []).filter(i => i.type === "spell" && temAtividade(i) && magiaDisponivel(i));
+// truques: inclui magias de nível 0; circulos: inclui as de 1º círculo para cima
+export function opcoesMagia(actor, { truques = true, circulos = true } = {}) {
+  return ((actor?.items ?? []).filter(i => i.type === "spell" && temAtividade(i) && magiaDisponivel(i))).filter(i => (i.system?.level ?? 0) === 0 ? truques : circulos);
 }
 
 export function opcoesItem(actor) {
@@ -111,7 +133,8 @@ export function quantidadeAuto(actor, tipo) {
   if (!actor) return 0;
   switch (tipo) {
     case "atacar": return numeroAtaques(actor);
-    case "magia": return opcoesMagia(actor).length ? 2 : 0;
+    case "magia": return opcoesMagia(actor, { truques: false }).length ? 2 : 0;
+    case "truque": return opcoesMagia(actor, { circulos: false }).length ? 1 : 0;
     case "item": return opcoesItem(actor).length ? 1 : 0;
     case "mover": return 2;
     case "transformar": return itemFormaSelvagem(actor) ? 2 : 0;
@@ -142,7 +165,7 @@ export function infoCarta(carta) {
     return {
       ...carta,
       nome: carta.nome || loc("COMBATE.Cartas.tipo.habilidade.nome"),
-      descricao: loc("COMBATE.Cartas.tipo.habilidade.texto"),
+      descricao: carta.texto || loc("COMBATE.Cartas.tipo.habilidade.texto"),
       img: carta.img || null,
       icone: TIPOS.habilidade.icone,
       categoria: "habilidade",
