@@ -1,0 +1,17 @@
+<li class="cm-retrato {{disp}} {{#if ativo}}ativo{{/if}} {{#if derrotado}}derrotado{{/if}} {{#if oculto}}oculto{{/if}}"
+    data-id="{{id}}" data-action="focar" data-tooltip="{{tooltip}}" data-tooltip-direction="DOWN">
+  <div class="cm-moldura">
+    <img src="{{img}}" alt="" loading="lazy">
+    {{#if derrotado}}<i class="cm-caveira fa-solid fa-skull"></i>{{/if}}
+    {{#if concentrando}}<i class="cm-conc fa-solid fa-brain"></i>{{/if}}
+    {{#if efeitos.length}}
+    <span class="cm-efeitos">{{#each efeitos}}<img src="{{img}}" alt="">{{/each}}</span>
+    {{/if}}
+    {{#if iniciativa}}<span class="cm-ini">{{iniciativa}}</span>{{/if}}
+  </div>
+  {{#if vida}}
+    {{#if vida.descricao}}<span class="cm-vida-pip {{vida.estado}}"></span>
+    {{else}}<span class="cm-vida {{vida.estado}}"><span style="width: {{vida.pct}}%"></span></span>{{/if}}
+  {{/if}}
+  {{#if ativo}}<span class="cm-nome-ativo">{{nome}}</span>{{/if}}
+</li>

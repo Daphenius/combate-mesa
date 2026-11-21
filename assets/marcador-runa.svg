@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="#f0d48a" stop-opacity="0"/>
+      <stop offset="82%" stop-color="#f0d48a" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="#f0d48a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="256" cy="256" r="250" fill="url(#g)"/>
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#c9a44c" stroke-width="10"/>
+  <circle cx="256" cy="256" r="212" fill="none" stroke="#f0d48a" stroke-width="3" stroke-dasharray="2 10"/>
+  <circle cx="256" cy="256" r="196" fill="none" stroke="#c9a44c" stroke-width="5"/>
+  <g fill="none" stroke="#f0d48a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <g id="r">
+      <path d="M256 80 v34 M244 90 l12 12 l12 -12"/>
+      <path d="M246 140 l10 -10 l10 10"/>
+    </g>
+    <use href="#r" transform="rotate(45 256 256)"/>
+    <use href="#r" transform="rotate(90 256 256)"/>
+    <use href="#r" transform="rotate(135 256 256)"/>
+    <use href="#r" transform="rotate(180 256 256)"/>
+    <use href="#r" transform="rotate(225 256 256)"/>
+    <use href="#r" transform="rotate(270 256 256)"/>
+    <use href="#r" transform="rotate(315 256 256)"/>
+  </g>
+  <g fill="#c9a44c">
+    <path d="M256 4 l14 22 h-28z"/>
+    <path d="M256 508 l14 -22 h-28z"/>
+    <path d="M4 256 l22 14 v-28z"/>
+    <path d="M508 256 l-22 14 v-28z"/>
+  </g>
+</svg>

@@ -1,0 +1,42 @@
+<div class="cm-res">
+  <header class="cm-res-cabeca {{#if vitoria}}vitoria{{/if}}">
+    <i class="fa-solid {{#if vitoria}}fa-crown{{else}}fa-flag{{/if}}"></i>
+    <h2>{{#if vitoria}}{{localize "COMBATE.Resultados.vitoria"}}{{else}}{{localize "COMBATE.Resultados.fim"}}{{/if}}</h2>
+    <span>{{localize "COMBATE.Resultados.rodadas" n=rodadas}}</span>
+  </header>
+
+  <div class="cm-res-destaques">
+    {{#if mvp}}<div class="cm-destaque"><img src="{{mvp.img}}" alt=""><em>{{localize "COMBATE.Resultados.mvp"}}</em><strong>{{mvp.nome}}</strong><span>{{mvp.valor}} {{localize "COMBATE.Resultados.dano"}}</span></div>{{/if}}
+    {{#if curandeiro}}<div class="cm-destaque"><img src="{{curandeiro.img}}" alt=""><em>{{localize "COMBATE.Resultados.curandeiro"}}</em><strong>{{curandeiro.nome}}</strong><span>{{curandeiro.valor}} {{localize "COMBATE.Resultados.cura"}}</span></div>{{/if}}
+    {{#if algoz}}<div class="cm-destaque"><img src="{{algoz.img}}" alt=""><em>{{localize "COMBATE.Resultados.algoz"}}</em><strong>{{algoz.nome}}</strong><span>{{algoz.valor}} {{localize "COMBATE.Resultados.abates"}}</span></div>{{/if}}
+  </div>
+
+  <table class="cm-res-tabela">
+    <thead>
+      <tr>
+        <th></th>
+        <th><i class="fa-solid fa-burst"></i> {{localize "COMBATE.Resultados.dano"}}</th>
+        <th><i class="fa-solid fa-heart-pulse"></i> {{localize "COMBATE.Resultados.cura"}}</th>
+        <th><i class="fa-solid fa-shield"></i> {{localize "COMBATE.Resultados.recebido"}}</th>
+        <th><i class="fa-solid fa-skull"></i> {{localize "COMBATE.Resultados.abates"}}</th>
+        <th><i class="fa-solid fa-bullseye"></i> {{localize "COMBATE.Resultados.precisao"}}</th>
+        <th><i class="fa-solid fa-star"></i> {{localize "COMBATE.Resultados.criticos"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each linhas}}
+      <tr class="{{#if hostil}}hostil{{/if}} {{#if caiu}}caiu{{/if}}">
+        <td class="cm-res-nome"><span><img src="{{img}}" alt=""> {{nome}}</span></td>
+        <td>{{dano}}</td><td>{{cura}}</td><td>{{recebido}}</td><td>{{abates}}</td>
+        <td>{{acertos}}/{{erros}}</td><td>{{criticos}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{#if isGM}}
+  <footer class="cm-res-rodape">
+    <button type="button" data-action="postarChat"><i class="fa-solid fa-comment"></i> {{localize "COMBATE.Resultados.postar"}}</button>
+  </footer>
+  {{/if}}
+</div>

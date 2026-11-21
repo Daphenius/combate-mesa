@@ -1,0 +1,22 @@
+<div class="cm-mao {{#unless pode}}bloqueada{{/unless}}">
+  {{#unless vazio}}
+  <div class="cm-mao-info">
+    <span class="cm-mao-monte" data-tooltip="{{localize 'COMBATE.Cartas.mao.monte'}}"><i class="fa-solid fa-layer-group"></i> {{monte}}</span>
+    {{#if mov}}<span class="cm-mao-mov" data-tooltip="{{localize 'COMBATE.Cartas.mao.mov'}}"><i class="fa-solid fa-shoe-prints"></i> +{{mov}}</span>{{/if}}
+    {{#if menos}}<span class="cm-mao-menos" data-tooltip="{{localize 'COMBATE.Cartas.mao.menos'}}"><i class="fa-solid fa-heart-crack"></i> −{{menos}}</span>{{/if}}
+    {{#if guardar}}<span class="cm-mao-ajuda" data-tooltip="{{dicaGuardar}}"><i class="fa-solid fa-circle-info"></i></span>{{/if}}
+  </div>
+
+  <div class="cm-mao-leque">
+    {{#each cartas}}
+    <button type="button" class="cm-mao-carta" data-action="jogar" data-uid="{{uid}}" style="{{estilo}}"
+            data-tooltip="{{dica}}" data-tooltip-direction="UP">{{{html}}}</button>
+    {{/each}}
+    {{#if vaziaMao}}<p class="cm-mao-vazia">{{localize "COMBATE.Cartas.mao.vazia"}}</p>{{/if}}
+  </div>
+
+  {{#if armadilha}}
+  <div class="cm-mao-armadilha" data-tooltip="{{localize 'COMBATE.Cartas.mao.armadilha'}}">{{{armadilhaHTML}}}</div>
+  {{/if}}
+  {{/unless}}
+</div>

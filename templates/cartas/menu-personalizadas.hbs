@@ -1,0 +1,66 @@
+<section class="tab {{tab.cssClass}}" data-tab="personalizadas" data-group="primary">
+  <p class="hint cm-menu-intro">{{localize "COMBATE.Cartas.Menu.customIntro"}}</p>
+  {{#each custom}}
+  <fieldset class="cm-menu-custom">
+    <legend>{{#if nome}}{{nome}}{{else}}{{localize "COMBATE.Cartas.custom.semNome"}}{{/if}}</legend>
+    <input type="hidden" name="custom.{{i}}.id" value="{{id}}">
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.nome"}}</label>
+      <div class="form-fields"><input type="text" name="custom.{{i}}.nome" value="{{nome}}"></div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.img"}}</label>
+      <div class="form-fields"><file-picker name="custom.{{i}}.img" type="image" value="{{img}}"></file-picker></div>
+    </div>
+    <div class="form-group stacked">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.descricao"}}</label>
+      <textarea name="custom.{{i}}.descricao" rows="2">{{descricao}}</textarea>
+    </div>
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.efeito"}}</label>
+      <div class="form-fields">
+        <select name="custom.{{i}}.efeito" data-recarregar>{{selectOptions efeitos selected=efeito}}</select>
+      </div>
+    </div>
+    {{#if ehItem}}
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.item"}}</label>
+      <div class="form-fields">
+        <input type="text" name="custom.{{i}}.item" value="{{item}}">
+        <label class="checkbox">{{localize "COMBATE.Cartas.Menu.campo.gratis"}} <input type="checkbox" name="custom.{{i}}.gratis" {{checked gratis}}></label>
+      </div>
+      <p class="hint">{{localize "COMBATE.Cartas.Menu.campo.itemDica"}}</p>
+    </div>
+    {{/if}}
+    {{#if ehMacro}}
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.macro"}}</label>
+      <div class="form-fields"><input type="text" name="custom.{{i}}.macro" value="{{macro}}" data-macro placeholder="Macro.xxxxxxxx"></div>
+      <p class="hint">{{localize "COMBATE.Cartas.Menu.campo.macroDica"}}</p>
+    </div>
+    {{/if}}
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.para"}}</label>
+      <div class="form-fields">
+        <select name="custom.{{i}}.para" data-recarregar>{{selectOptions paras selected=para}}</select>
+        <input type="number" name="custom.{{i}}.quantidade" value="{{quantidade}}" min="0" max="20" step="1" data-tooltip="{{localize 'COMBATE.Cartas.Menu.campo.quantidade'}}">
+      </div>
+    </div>
+    {{#if ehClasse}}
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.classe"}}</label>
+      <div class="form-fields"><input type="text" name="custom.{{i}}.classe" value="{{classe}}" placeholder="druid"></div>
+      <p class="hint">{{localize "COMBATE.Cartas.Menu.campo.classeDica"}}</p>
+    </div>
+    {{/if}}
+    {{#if ehAtores}}
+    <div class="form-group">
+      <label>{{localize "COMBATE.Cartas.Menu.campo.atores"}}</label>
+      <div class="form-fields"><multi-select name="custom.{{i}}.atores">{{selectOptions atoresOpcoes selected=atores}}</multi-select></div>
+    </div>
+    {{/if}}
+    <button type="button" class="cm-menu-apagar" data-action="apagarCarta" data-indice="{{i}}"><i class="fa-solid fa-trash"></i> {{localize "COMBATE.Cartas.Menu.apagar"}}</button>
+  </fieldset>
+  {{/each}}
+  <button type="button" class="cm-menu-nova" data-action="novaCarta"><i class="fa-solid fa-plus"></i> {{localize "COMBATE.Cartas.Menu.nova"}}</button>
+</section>
