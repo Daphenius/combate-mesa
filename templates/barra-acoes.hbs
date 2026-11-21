@@ -1,35 +1,35 @@
-<div class="cm-barra {{#if minimizada}}minimizada{{/if}} {{#if seuTurno}}seu-turno{{/if}} {{#if modoCartas}}cm-modo-cartas{{/if}}">
+<div class="cmb-barra {{#if minimizada}}minimizada{{/if}} {{#if seuTurno}}seu-turno{{/if}} {{#if modoCartas}}cmb-modo-cartas{{/if}}">
   {{#unless vazio}}
-  <header class="cm-barra-topo">
-    <a class="cm-barra-retrato" data-action="abrirFicha" data-tooltip="{{localize 'COMBATE.Barra.ficha'}}"><img src="{{img}}" alt=""></a>
-    <div class="cm-barra-nome">
+  <header class="cmb-barra-topo">
+    <a class="cmb-barra-retrato" data-action="abrirFicha" data-tooltip="{{localize 'COMBATE.Barra.ficha'}}"><img src="{{img}}" alt=""></a>
+    <div class="cmb-barra-nome">
       <strong>{{nome}}</strong>
-      <span class="cm-barra-estado">{{#if seuTurno}}{{localize "COMBATE.Barra.seuTurno"}}{{else}}{{localize "COMBATE.Barra.aguardando"}}{{/if}}</span>
+      <span class="cmb-barra-estado">{{#if seuTurno}}{{localize "COMBATE.Barra.seuTurno"}}{{else}}{{localize "COMBATE.Barra.aguardando"}}{{/if}}</span>
     </div>
 
-    <div class="cm-selos">
+    <div class="cmb-selos">
       {{#unless modoCartas}}
       {{#each selos}}
-      <button type="button" class="cm-selo {{id}} {{#if gasto}}gasto{{/if}}" data-action="selo" data-selo="{{id}}" data-tooltip="{{nome}}">
+      <button type="button" class="cmb-selo {{id}} {{#if gasto}}gasto{{/if}}" data-action="selo" data-selo="{{id}}" data-tooltip="{{nome}}">
         <i class="{{icone}}"></i><span>{{curto}}</span>
       </button>
       {{/each}}
       {{/unless}}
       {{#if mov}}
-      <div class="cm-movimento {{#if mov.disparada}}disparada{{/if}}" data-tooltip="{{localize 'COMBATE.Barra.movimento'}}">
+      <div class="cmb-movimento {{#if mov.disparada}}disparada{{/if}}" data-tooltip="{{localize 'COMBATE.Barra.movimento'}}">
         <i class="fa-solid fa-shoe-prints"></i>
-        <div class="cm-mov-barra"><span style="width: {{mov.pct}}%"></span></div>
-        <span class="cm-mov-num">{{mov.resta}}<small>/{{mov.total}} {{mov.unidade}}</small></span>
+        <div class="cmb-mov-barra"><span style="width: {{mov.pct}}%"></span></div>
+        <span class="cmb-mov-num">{{mov.resta}}<small>/{{mov.total}} {{mov.unidade}}</small></span>
       </div>
       {{/if}}
     </div>
 
-    <div class="cm-barra-botoes">
+    <div class="cmb-barra-botoes">
       {{#if podeTerminar}}
-      <button type="button" class="cm-terminar" data-action="terminarTurno" data-tooltip="{{localize 'COMBATE.Barra.terminar'}}"><i class="fa-solid fa-check"></i><span>{{localize "COMBATE.Barra.terminarCurto"}}</span></button>
+      <button type="button" class="cmb-terminar" data-action="terminarTurno" data-tooltip="{{localize 'COMBATE.Barra.terminar'}}"><i class="fa-solid fa-check"></i><span>{{localize "COMBATE.Barra.terminarCurto"}}</span></button>
       {{/if}}
       {{#unless modoCartas}}
-      <button type="button" class="cm-min" data-action="minimizar" data-tooltip="{{localize 'COMBATE.Barra.minimizar'}}">
+      <button type="button" class="cmb-min" data-action="minimizar" data-tooltip="{{localize 'COMBATE.Barra.minimizar'}}">
         <i class="fa-solid {{#if minimizada}}fa-chevron-up{{else}}fa-chevron-down{{/if}}"></i>
       </button>
       {{/unless}}
@@ -37,33 +37,33 @@
   </header>
 
   {{#unless modoCartas}}{{#unless minimizada}}
-  <nav class="cm-abas">
+  <nav class="cmb-abas">
     {{#each abas}}
     <button type="button" class="{{#if ativa}}ativa{{/if}}" data-action="aba" data-aba="{{id}}" data-tooltip="{{nome}}"><i class="{{icone}}"></i><span>{{nome}}</span></button>
     {{/each}}
   </nav>
 
-  <div class="cm-cartas">
+  <div class="cmb-cartas">
     {{#if basicas}}
       {{#each basicas}}
-      <button type="button" class="cm-carta basica {{#if esgotado}}esgotado{{/if}}" data-action="usarBasica" data-acao="{{id}}" data-tooltip="{{dica}}">
-        <span class="cm-carta-arte"><i class="cm-carta-icone {{icone}}"></i><i class="cm-carta-selo {{selo}}"></i></span>
-        <span class="cm-carta-nome">{{nome}}</span>
+      <button type="button" class="cmb-carta basica {{#if esgotado}}esgotado{{/if}}" data-action="usarBasica" data-acao="{{id}}" data-tooltip="{{dica}}">
+        <span class="cmb-carta-arte"><i class="cmb-carta-icone {{icone}}"></i><i class="cmb-carta-selo {{selo}}"></i></span>
+        <span class="cmb-carta-nome">{{nome}}</span>
       </button>
       {{/each}}
     {{else if grupos}}
       {{#each grupos}}
-      <div class="cm-grupo">
-        <div class="cm-grupo-rotulo">
+      <div class="cmb-grupo">
+        <div class="cmb-grupo-rotulo">
           <span>{{rotulo}}</span>
-          {{#if espacos}}<span class="cm-espacos">{{#each espacos}}<i class="{{#if cheio}}cheio{{/if}}"></i>{{/each}}</span>{{/if}}
+          {{#if espacos}}<span class="cmb-espacos">{{#each espacos}}<i class="{{#if cheio}}cheio{{/if}}"></i>{{/each}}</span>{{/if}}
         </div>
-        <div class="cm-grupo-cartas">{{#each cartas}}{{> "modules/combate-mesa/templates/carta.hbs" this}}{{/each}}</div>
+        <div class="cmb-grupo-cartas">{{#each cartas}}{{> "modules/combate-mesa/templates/carta.hbs" this}}{{/each}}</div>
       </div>
       {{/each}}
     {{else}}
       {{#each cartas}}{{> "modules/combate-mesa/templates/carta.hbs" this}}{{/each}}
-      {{#if vazioAba}}<p class="cm-vazio">{{localize "COMBATE.Barra.vazio"}}</p>{{/if}}
+      {{#if vazioAba}}<p class="cmb-vazio">{{localize "COMBATE.Barra.vazio"}}</p>{{/if}}
     {{/if}}
   </div>
   {{/unless}}{{/unless}}

@@ -27,9 +27,9 @@ function estadoVida(pct) {
 
 export class LinhaTempo extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    id: "cm-linha-tempo",
+    id: "cmb-linha-tempo",
     tag: "aside",
-    classes: ["cm-linha-tempo"],
+    classes: ["cmb-linha-tempo"],
     window: { frame: false, positioned: false },
     actions: {
       focar: LinhaTempo.#focar,

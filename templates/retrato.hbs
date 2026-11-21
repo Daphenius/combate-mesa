@@ -1,17 +1,17 @@
-<li class="cm-retrato {{disp}} {{#if ativo}}ativo{{/if}} {{#if derrotado}}derrotado{{/if}} {{#if oculto}}oculto{{/if}}"
+<li class="cmb-retrato {{disp}} {{#if ativo}}ativo{{/if}} {{#if derrotado}}derrotado{{/if}} {{#if oculto}}oculto{{/if}}"
     data-id="{{id}}" data-action="focar" data-tooltip="{{tooltip}}" data-tooltip-direction="DOWN">
-  <div class="cm-moldura">
+  <div class="cmb-moldura">
     <img src="{{img}}" alt="" loading="lazy">
-    {{#if derrotado}}<i class="cm-caveira fa-solid fa-skull"></i>{{/if}}
-    {{#if concentrando}}<i class="cm-conc fa-solid fa-brain"></i>{{/if}}
+    {{#if derrotado}}<i class="cmb-caveira fa-solid fa-skull"></i>{{/if}}
+    {{#if concentrando}}<i class="cmb-conc fa-solid fa-brain"></i>{{/if}}
     {{#if efeitos.length}}
-    <span class="cm-efeitos">{{#each efeitos}}<img src="{{img}}" alt="">{{/each}}</span>
+    <span class="cmb-efeitos">{{#each efeitos}}<img src="{{img}}" alt="">{{/each}}</span>
     {{/if}}
-    {{#if iniciativa}}<span class="cm-ini">{{iniciativa}}</span>{{/if}}
+    {{#if iniciativa}}<span class="cmb-ini">{{iniciativa}}</span>{{/if}}
   </div>
   {{#if vida}}
-    {{#if vida.descricao}}<span class="cm-vida-pip {{vida.estado}}"></span>
-    {{else}}<span class="cm-vida {{vida.estado}}"><span style="width: {{vida.pct}}%"></span></span>{{/if}}
+    {{#if vida.descricao}}<span class="cmb-vida-pip {{vida.estado}}"></span>
+    {{else}}<span class="cmb-vida {{vida.estado}}"><span style="width: {{vida.pct}}%"></span></span>{{/if}}
   {{/if}}
-  {{#if ativo}}<span class="cm-nome-ativo">{{nome}}</span>{{/if}}
+  {{#if ativo}}<span class="cmb-nome-ativo">{{nome}}</span>{{/if}}
 </li>

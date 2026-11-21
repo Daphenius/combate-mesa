@@ -12,19 +12,19 @@ let pendentes = 0;
 
 function mostrarFaixa({ titulo, subtitulo, img, classe = "" }) {
   const el = document.createElement("div");
-  el.className = `cm-anuncio ${classe}`;
+  el.className = `cmb-anuncio ${classe}`;
   el.innerHTML = `
-    <div class="cm-anuncio-faixa">
-      ${img ? `<img class="cm-anuncio-retrato" src="${esc(img)}" alt="">` : ""}
-      <div class="cm-anuncio-texto">
-        ${subtitulo ? `<span class="cm-anuncio-sub">${esc(subtitulo)}</span>` : ""}
-        <span class="cm-anuncio-titulo">${esc(titulo)}</span>
+    <div class="cmb-anuncio-faixa">
+      ${img ? `<img class="cmb-anuncio-retrato" src="${esc(img)}" alt="">` : ""}
+      <div class="cmb-anuncio-texto">
+        ${subtitulo ? `<span class="cmb-anuncio-sub">${esc(subtitulo)}</span>` : ""}
+        <span class="cmb-anuncio-titulo">${esc(titulo)}</span>
       </div>
     </div>`;
   document.body.append(el);
   const dur = movimentoReduzido() ? 1400 : 2100;
   return new Promise(resolve => setTimeout(() => {
-    el.classList.add("cm-saindo");
+    el.classList.add("cmb-saindo");
     setTimeout(() => { el.remove(); resolve(); }, 350);
   }, dur));
 }
@@ -56,15 +56,15 @@ export function instalarAnuncio() {
     const visivel = game.user.isGM || c.visible;
     if (visivel) focarCamera(c);
     if (!cfg("anuncio")) return;
-    if (comecou) enfileirar({ titulo: loc("COMBATE.Anuncio.inicio"), subtitulo: loc("COMBATE.Anuncio.rolem"), classe: "cm-inicio" });
-    else if (current?.round !== prior?.round) enfileirar({ titulo: loc("COMBATE.Anuncio.rodada", { n: current.round }), classe: "cm-rodada" });
+    if (comecou) enfileirar({ titulo: loc("COMBATE.Anuncio.inicio"), subtitulo: loc("COMBATE.Anuncio.rolem"), classe: "cmb-inicio" });
+    else if (current?.round !== prior?.round) enfileirar({ titulo: loc("COMBATE.Anuncio.rodada", { n: current.round }), classe: "cmb-rodada" });
     if (!visivel) return;
     const seu = c.isOwner && !game.user.isGM;
     enfileirar({
       titulo: seu ? loc("COMBATE.Anuncio.seuTurno") : c.name,
       subtitulo: seu ? c.name : loc("COMBATE.Anuncio.turnoDe"),
       img: imagemDe(c),
-      classe: seu ? "cm-seu" : ""
+      classe: seu ? "cmb-seu" : ""
     });
   });
 }

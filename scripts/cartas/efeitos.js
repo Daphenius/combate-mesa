@@ -35,18 +35,18 @@ async function escolher(titulo, opcoes) {
     let cab = "";
     if (o.grupo !== undefined && o.grupo !== grupoAtual) {
       grupoAtual = o.grupo;
-      cab = `<h4 class="cm-escolha-grupo">${esc(o.grupo)}</h4>`;
+      cab = `<h4 class="cmb-escolha-grupo">${esc(o.grupo)}</h4>`;
     }
-    return `${cab}<label class="cm-escolha-opcao">
+    return `${cab}<label class="cmb-escolha-opcao">
       <input type="radio" name="escolha" value="${i}" ${i === 0 ? "checked" : ""}>
       <img src="${esc(o.img)}" alt=""><span>${esc(o.nome)}</span>${o.extra ? `<em>${esc(o.extra)}</em>` : ""}
     </label>`;
   }).join("");
   const escolha = await DialogV2.wait({
     window: { title: titulo, icon: "fa-solid fa-layer-group" },
-    classes: ["cm-escolha-janela"],
+    classes: ["cmb-escolha-janela"],
     position: { width: 380 },
-    content: `<div class="cm-escolha">${linhas}</div>`,
+    content: `<div class="cmb-escolha">${linhas}</div>`,
     buttons: [{
       action: "ok", label: loc("COMBATE.Cartas.escolher.ok"), icon: "fa-solid fa-check", default: true,
       callback: (event, button) => button.form.elements.escolha.value
@@ -293,7 +293,7 @@ export async function anunciarCarta(combatant, carta, { oculta = false, acao = n
   const nome = combatant.token?.name ?? combatant.name;
   const chave = gatilho ? "COMBATE.Cartas.chat.disparou" : oculta ? "COMBATE.Cartas.chat.baixou" : "COMBATE.Cartas.chat.jogou";
   const texto = loc(chave, { nome: esc(nome), carta: esc(info.nome) }) + (extra ? ` <em>→ ${esc(extra)}</em>` : "");
-  const content = `<div class="cm-chat-carta">${cartaHTML(info, { mini: true, oculta })}<p>${texto}</p></div>`;
+  const content = `<div class="cmb-chat-carta">${cartaHTML(info, { mini: true, oculta })}<p>${texto}</p></div>`;
   return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: combatant.actor, token: combatant.token }),
     content,
@@ -333,7 +333,7 @@ async function resolverAgarrar({ modo, total, alvo: tokenUuid }, speaker) {
   const venceu = total >= defesa;
   if (venceu) await actor.toggleStatusEffect(modo === "agarrar" ? "grappled" : "prone", { active: true });
   const chave = venceu ? `COMBATE.Cartas.agarrar.venceu.${modo}` : "COMBATE.Cartas.agarrar.falhou";
-  await ChatMessage.create({ speaker, content: `<div class="cm-chat-acao"><i class="fa-solid fa-hand-fist"></i><div>${loc(chave, { alvo: esc(tokenDoc.name), ataque: total, defesa })}</div></div>` });
+  await ChatMessage.create({ speaker, content: `<div class="cmb-chat-acao"><i class="fa-solid fa-hand-fist"></i><div>${loc(chave, { alvo: esc(tokenDoc.name), ataque: total, defesa })}</div></div>` });
 }
 
 export async function executarPedido(message) {

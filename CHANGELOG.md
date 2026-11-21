@@ -2,6 +2,11 @@
 
 > ⚠️ **Beta, em testes:** o Combate da Mesa ainda está sendo testado no Foundry VTT 14 e no D&D 5e 6 e pode ter erros. Teste primeiro num mundo de teste ou faça backup antes de ativar. Bugs e sugestões: https://github.com/Daphenius/combate-mesa/issues
 
+## v0.2.6 (beta)
+
+- **O módulo voltou a carregar (o problema era da v0.2.5).** O arquivo do menu de cartas (`scripts/cartas/menu.js`) foi publicado vazio, e o Foundry parava de carregar o módulo inteiro: o Combate da Mesa não aparecia nas configurações e nada surgia ao iniciar um combate. O menu foi refeito.
+- **Não quebra mais o Calendário da Mesa.** Os dois módulos usavam o mesmo prefixo `cm-` nas classes de estilo, e algumas tinham o mesmo nome (`cm-linha`, `cm-controles`, `cm-grupo`, `cm-barra`, `cm-vazio`). Com os dois ativos, o relógio do calendário ganhava o fundo translúcido da linha do tempo e os botões de tempo ficavam em colunas soltas; do lado do combate, a barra de ações podia ficar achatada pelo estilo das barras de progresso do calendário. Todas as classes, ids e variáveis de estilo do Combate da Mesa passam a usar o prefixo próprio `cmb-`. Nada muda no uso nem nas configurações salvas.
+
 ## v0.2.5 (beta, primeira versão publicada)
 
 - **Combate com cartas no tema claro/escuro:** o painel ao lado da mão, o aviso de mão vazia, a janela de escolha e as etiquetas do menu de cartas seguem o tema do módulo. As cartas mantêm a moldura colorida nos dois temas.

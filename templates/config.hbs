@@ -1,38 +1,38 @@
-<div class="cm-cfg">
-  <nav class="cm-cfg-nav">
+<div class="cmb-cfg">
+  <nav class="cmb-cfg-nav">
     {{#each secoes}}
-    <button type="button" class="cm-cfg-aba {{#if ativa}}ativa{{/if}}" data-action="secao" data-secao="{{id}}">
+    <button type="button" class="cmb-cfg-aba {{#if ativa}}ativa{{/if}}" data-action="secao" data-secao="{{id}}">
       <i class="{{icone}}"></i><span>{{nome}}</span>
     </button>
     {{/each}}
   </nav>
 
-  <div class="cm-cfg-paineis">
+  <div class="cmb-cfg-paineis">
     {{#each secoes}}
-    <section class="cm-cfg-painel {{#if ativa}}ativa{{/if}}" data-secao="{{id}}">
-      <header class="cm-cfg-cabeca">
+    <section class="cmb-cfg-painel {{#if ativa}}ativa{{/if}}" data-secao="{{id}}">
+      <header class="cmb-cfg-cabeca">
         <h3><i class="{{icone}}"></i> {{nome}}</h3>
         <p>{{descricao}}</p>
       </header>
 
       {{#each campos}}
-      <div class="cm-cfg-linha {{tipo}}">
-        <div class="cm-cfg-texto">
-          <label for="cm-cfg-{{key}}">{{nome}}
-            {{#if mundo}}<span class="cm-cfg-tag" data-tooltip="{{localize 'COMBATE.Config.tagMundoDica'}}"><i class="fa-solid fa-globe"></i> {{localize "COMBATE.Config.tagMundo"}}</span>
-            {{else}}<span class="cm-cfg-tag voce" data-tooltip="{{localize 'COMBATE.Config.tagVoceDica'}}"><i class="fa-solid fa-user"></i> {{localize "COMBATE.Config.tagVoce"}}</span>{{/if}}
-            {{#if recarrega}}<span class="cm-cfg-tag recarrega" data-tooltip="{{localize 'COMBATE.Config.recarregar'}}"><i class="fa-solid fa-rotate"></i></span>{{/if}}
+      <div class="cmb-cfg-linha {{tipo}}">
+        <div class="cmb-cfg-texto">
+          <label for="cmb-cfg-{{key}}">{{nome}}
+            {{#if mundo}}<span class="cmb-cfg-tag" data-tooltip="{{localize 'COMBATE.Config.tagMundoDica'}}"><i class="fa-solid fa-globe"></i> {{localize "COMBATE.Config.tagMundo"}}</span>
+            {{else}}<span class="cmb-cfg-tag voce" data-tooltip="{{localize 'COMBATE.Config.tagVoceDica'}}"><i class="fa-solid fa-user"></i> {{localize "COMBATE.Config.tagVoce"}}</span>{{/if}}
+            {{#if recarrega}}<span class="cmb-cfg-tag recarrega" data-tooltip="{{localize 'COMBATE.Config.recarregar'}}"><i class="fa-solid fa-rotate"></i></span>{{/if}}
           </label>
           {{#if dica}}<p>{{dica}}</p>{{/if}}
         </div>
-        <div class="cm-cfg-controle">
+        <div class="cmb-cfg-controle">
           {{#if (eq tipo "chave")}}
-          <label class="cm-cfg-chave">
-            <input type="checkbox" id="cm-cfg-{{key}}" name="{{key}}" {{#if valor}}checked{{/if}}>
-            <span class="cm-cfg-trilho"></span>
+          <label class="cmb-cfg-chave">
+            <input type="checkbox" id="cmb-cfg-{{key}}" name="{{key}}" {{#if valor}}checked{{/if}}>
+            <span class="cmb-cfg-trilho"></span>
           </label>
           {{else if (eq tipo "opcoes")}}
-          <div class="cm-cfg-segmentos" role="radiogroup">
+          <div class="cmb-cfg-segmentos" role="radiogroup">
             {{#each opcoes}}
             <label class="{{#if marcado}}marcado{{/if}}">
               <input type="radio" name="{{../key}}" value="{{valor}}" {{#if marcado}}checked{{/if}}>
@@ -41,9 +41,9 @@
             {{/each}}
           </div>
           {{else if (eq tipo "numero")}}
-          <input type="number" id="cm-cfg-{{key}}" name="{{key}}" value="{{valor}}">
+          <input type="number" id="cmb-cfg-{{key}}" name="{{key}}" value="{{valor}}">
           {{else}}
-          <input type="text" id="cm-cfg-{{key}}" name="{{key}}" value="{{valor}}">
+          <input type="text" id="cmb-cfg-{{key}}" name="{{key}}" value="{{valor}}">
           {{/if}}
         </div>
       </div>
@@ -52,8 +52,8 @@
     {{/each}}
   </div>
 
-  <footer class="cm-cfg-rodape">
-    <button type="button" class="cm-cfg-secundario" data-action="padrao"><i class="fa-solid fa-arrow-rotate-left"></i> {{localize "COMBATE.Config.padrao"}}</button>
-    <button type="submit" class="cm-cfg-primario"><i class="fa-solid fa-floppy-disk"></i> {{localize "COMBATE.Config.salvar"}}</button>
+  <footer class="cmb-cfg-rodape">
+    <button type="button" class="cmb-cfg-secundario" data-action="padrao"><i class="fa-solid fa-arrow-rotate-left"></i> {{localize "COMBATE.Config.padrao"}}</button>
+    <button type="submit" class="cmb-cfg-primario"><i class="fa-solid fa-floppy-disk"></i> {{localize "COMBATE.Config.salvar"}}</button>
   </footer>
 </div>

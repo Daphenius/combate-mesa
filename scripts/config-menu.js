@@ -18,10 +18,10 @@ function podeEditar(def) {
 
 export class ConfigMenu extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    id: "cm-config",
+    id: "cmb-config",
     tag: "form",
-    classes: ["cm-config"],
-    window: { title: "COMBATE.Config.titulo", icon: "fa-solid fa-swords", contentClasses: ["cm-config-conteudo"] },
+    classes: ["cmb-config"],
+    window: { title: "COMBATE.Config.titulo", icon: "fa-solid fa-swords", contentClasses: ["cmb-config-conteudo"] },
     position: { width: 640, height: "auto" },
     form: { handler: ConfigMenu.#salvar, closeOnSubmit: true },
     actions: { secao: ConfigMenu.#secao, padrao: ConfigMenu.#padrao }

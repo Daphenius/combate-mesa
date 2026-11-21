@@ -78,7 +78,7 @@ export function instalarPlacar() {
 
 export class ResultadosCombate extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["cm-resultados"],
+    classes: ["cmb-resultados"],
     window: { title: "COMBATE.Resultados.titulo", icon: "fa-solid fa-trophy", resizable: true },
     position: { width: 620, height: "auto" },
     actions: { postarChat: ResultadosCombate.#postarChat }
@@ -132,7 +132,7 @@ export class ResultadosCombate extends HandlebarsApplicationMixin(ApplicationV2)
   static async #postarChat() {
     const linhas = this.#linhas().filter(l => !l.hostil);
     const corpo = linhas.map(l => `<tr><td>${esc(l.nome)}</td><td>${l.dano}</td><td>${l.cura}</td><td>${l.abates}</td><td>${l.criticos}</td></tr>`).join("");
-    const content = `<div class="cm-chat-resultados"><h3><i class="fa-solid fa-trophy"></i> ${esc(loc("COMBATE.Resultados.titulo"))}</h3>
+    const content = `<div class="cmb-chat-resultados"><h3><i class="fa-solid fa-trophy"></i> ${esc(loc("COMBATE.Resultados.titulo"))}</h3>
       <table><thead><tr><th></th><th>${esc(loc("COMBATE.Resultados.dano"))}</th><th>${esc(loc("COMBATE.Resultados.cura"))}</th>
       <th>${esc(loc("COMBATE.Resultados.abates"))}</th><th>${esc(loc("COMBATE.Resultados.criticos"))}</th></tr></thead><tbody>${corpo}</tbody></table></div>`;
     await ChatMessage.create({ content, speaker: { alias: loc("COMBATE.Titulo") } });

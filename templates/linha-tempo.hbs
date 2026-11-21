@@ -1,26 +1,26 @@
-<div class="cm-linha">
+<div class="cmb-linha">
   {{#unless vazio}}
-  <div class="cm-rodada" data-tooltip="{{localize 'COMBATE.Linha.rodada'}}">
-    <span class="cm-rodada-rotulo">{{localize "COMBATE.Linha.rodadaCurta"}}</span>
-    <span class="cm-rodada-num">{{rodada}}</span>
+  <div class="cmb-rodada" data-tooltip="{{localize 'COMBATE.Linha.rodada'}}">
+    <span class="cmb-rodada-rotulo">{{localize "COMBATE.Linha.rodadaCurta"}}</span>
+    <span class="cmb-rodada-num">{{rodada}}</span>
   </div>
 
-  <ol class="cm-fila">
+  <ol class="cmb-fila">
     {{#each agora}}{{> "modules/combate-mesa/templates/retrato.hbs" this}}{{/each}}
     {{#if depois.length}}
-    <li class="cm-divisor" data-tooltip="{{localize 'COMBATE.Linha.proximaRodada'}}"><span>{{proximaRodada}}</span></li>
+    <li class="cmb-divisor" data-tooltip="{{localize 'COMBATE.Linha.proximaRodada'}}"><span>{{proximaRodada}}</span></li>
     {{#each depois}}{{> "modules/combate-mesa/templates/retrato.hbs" this}}{{/each}}
     {{/if}}
   </ol>
 
   {{#if podeControlar}}
-  <div class="cm-controles">
+  <div class="cmb-controles">
     <button type="button" data-action="anterior" data-tooltip="{{localize 'COMBATE.Linha.anterior'}}"><i class="fa-solid fa-chevron-left"></i></button>
     <button type="button" data-action="proximo" data-tooltip="{{localize 'COMBATE.Linha.proximo'}}"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
   {{else if podeTerminar}}
-  <div class="cm-controles">
-    <button type="button" class="cm-terminar" data-action="terminarTurno" data-tooltip="{{localize 'COMBATE.Barra.terminar'}}"><i class="fa-solid fa-check"></i></button>
+  <div class="cmb-controles">
+    <button type="button" class="cmb-terminar" data-action="terminarTurno" data-tooltip="{{localize 'COMBATE.Barra.terminar'}}"><i class="fa-solid fa-check"></i></button>
   </div>
   {{/if}}
   {{/unless}}

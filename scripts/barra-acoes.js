@@ -49,9 +49,9 @@ function magiaDisponivel(item) {
 
 export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    id: "cm-barra-acoes",
+    id: "cmb-barra-acoes",
     tag: "section",
-    classes: ["cm-barra-acoes"],
+    classes: ["cmb-barra-acoes"],
     window: { frame: false, positioned: false },
     actions: {
       usarItem: BarraAcoes.#usarItem,
@@ -91,8 +91,8 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
 
   atualizar() {
     const combate = !!combateAtivo();
-    document.body.classList.toggle("cm-em-combate", combate);
-    document.body.classList.toggle("cm-sem-hotbar", combate && !!cfg("esconderHotbar"));
+    document.body.classList.toggle("cmb-em-combate", combate);
+    document.body.classList.toggle("cmb-sem-hotbar", combate && !!cfg("esconderHotbar"));
     if (this.deveAparecer()) this.render({ force: true });
     else if (this.rendered) this.close({ animate: false });
   }

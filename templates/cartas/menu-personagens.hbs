@@ -1,16 +1,16 @@
 <section class="tab {{tab.cssClass}}" data-tab="personagens" data-group="primary">
-  {{#unless modoCartas}}<p class="notification warning cm-menu-aviso">{{localize "COMBATE.Cartas.Menu.desligado"}}</p>{{/unless}}
-  <p class="hint cm-menu-intro">{{localize "COMBATE.Cartas.Menu.personagensIntro"}}</p>
+  {{#unless modoCartas}}<p class="notification warning cmb-menu-aviso">{{localize "COMBATE.Cartas.Menu.desligado"}}</p>{{/unless}}
+  <p class="hint cmb-menu-intro">{{localize "COMBATE.Cartas.Menu.personagensIntro"}}</p>
   {{#each personagens}}
-  <details class="cm-menu-ator" {{#if alterado}}open{{/if}}>
+  <details class="cmb-menu-ator" {{#if alterado}}open{{/if}}>
     <summary>
       <img src="{{img}}" alt=""><span>{{nome}}</span>
-      {{#if alterado}}<span class="cm-menu-tag">{{localize "COMBATE.Cartas.Menu.manual"}}</span>{{/if}}
-      <button type="button" class="cm-menu-limpar" data-action="limparAtor" data-chave="{{chave}}" data-tooltip="{{localize 'COMBATE.Cartas.Menu.limpar'}}"><i class="fa-solid fa-rotate-left"></i></button>
+      {{#if alterado}}<span class="cmb-menu-tag">{{localize "COMBATE.Cartas.Menu.manual"}}</span>{{/if}}
+      <button type="button" class="cmb-menu-limpar" data-action="limparAtor" data-chave="{{chave}}" data-tooltip="{{localize 'COMBATE.Cartas.Menu.limpar'}}"><i class="fa-solid fa-rotate-left"></i></button>
     </summary>
-    <div class="cm-menu-grade">
+    <div class="cmb-menu-grade">
       {{#each tipos}}
-      <label class="cm-menu-qtd" data-tooltip="{{nome}}">
+      <label class="cmb-menu-qtd" data-tooltip="{{nome}}">
         <i class="{{icone}}"></i><span>{{nome}}</span>
         <input type="number" name="atores.{{../chave}}.{{id}}" value="{{valor}}" placeholder="{{auto}}" min="0" max="20" step="1">
       </label>

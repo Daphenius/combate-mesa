@@ -1,7 +1,7 @@
 <section class="tab {{tab.cssClass}}" data-tab="personalizadas" data-group="primary">
-  <p class="hint cm-menu-intro">{{localize "COMBATE.Cartas.Menu.customIntro"}}</p>
+  <p class="hint cmb-menu-intro">{{localize "COMBATE.Cartas.Menu.customIntro"}}</p>
   {{#each custom}}
-  <fieldset class="cm-menu-custom">
+  <fieldset class="cmb-menu-custom">
     <legend>{{#if nome}}{{nome}}{{else}}{{localize "COMBATE.Cartas.custom.semNome"}}{{/if}}</legend>
     <input type="hidden" name="custom.{{i}}.id" value="{{id}}">
     <div class="form-group">
@@ -59,8 +59,8 @@
       <div class="form-fields"><multi-select name="custom.{{i}}.atores">{{selectOptions atoresOpcoes selected=atores}}</multi-select></div>
     </div>
     {{/if}}
-    <button type="button" class="cm-menu-apagar" data-action="apagarCarta" data-indice="{{i}}"><i class="fa-solid fa-trash"></i> {{localize "COMBATE.Cartas.Menu.apagar"}}</button>
+    <button type="button" class="cmb-menu-apagar" data-action="apagarCarta" data-indice="{{i}}"><i class="fa-solid fa-trash"></i> {{localize "COMBATE.Cartas.Menu.apagar"}}</button>
   </fieldset>
   {{/each}}
-  <button type="button" class="cm-menu-nova" data-action="novaCarta"><i class="fa-solid fa-plus"></i> {{localize "COMBATE.Cartas.Menu.nova"}}</button>
+  <button type="button" class="cmb-menu-nova" data-action="novaCarta"><i class="fa-solid fa-plus"></i> {{localize "COMBATE.Cartas.Menu.nova"}}</button>
 </section>

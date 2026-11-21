@@ -22,7 +22,7 @@ export const ACOES_BASICAS = [
 
 async function cartao(actor, token, acao, extra = "") {
   const nome = esc(token?.name ?? actor.name);
-  const content = `<div class="cm-chat-acao"><i class="${acao.icone}"></i>
+  const content = `<div class="cmb-chat-acao"><i class="${acao.icone}"></i>
     <div><strong>${nome}</strong> ${esc(loc(`COMBATE.Basica.${acao.id}.chat`))}${extra}</div></div>`;
   return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor, token: token?.document ?? token }), content });
 }

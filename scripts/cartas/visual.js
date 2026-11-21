@@ -10,15 +10,15 @@ import { infoCarta } from "./tipos.js";
 
 // HTML de uma carta (face ou verso). Usado na mão, no chat e na revelação.
 export function cartaHTML(info, { mini = false, oculta = false, classes = "" } = {}) {
-  if (oculta) return `<div class="cm-c verso ${mini ? "mini" : ""} ${classes}"><div class="cm-c-verso"><i class="fa-solid fa-dragon"></i></div></div>`;
+  if (oculta) return `<div class="cmb-c verso ${mini ? "mini" : ""} ${classes}"><div class="cmb-c-verso"><i class="fa-solid fa-dragon"></i></div></div>`;
   const arte = info.img
     ? `<img src="${esc(info.img)}" alt="">`
-    : `<i class="${esc(info.icone)}"></i>${info.rotulo ? `<b class="cm-c-rotulo">${esc(info.rotulo)}</b>` : ""}`;
-  return `<div class="cm-c ${esc(info.categoria)} ${mini ? "mini" : ""} ${classes}">
-    <div class="cm-c-nome">${esc(info.nome)}</div>
-    <div class="cm-c-arte">${arte}</div>
-    <div class="cm-c-tipo">[ ${esc(info.tipoNome)} ]</div>
-    <div class="cm-c-texto">${esc(info.descricao)}</div>
+    : `<i class="${esc(info.icone)}"></i>${info.rotulo ? `<b class="cmb-c-rotulo">${esc(info.rotulo)}</b>` : ""}`;
+  return `<div class="cmb-c ${esc(info.categoria)} ${mini ? "mini" : ""} ${classes}">
+    <div class="cmb-c-nome">${esc(info.nome)}</div>
+    <div class="cmb-c-arte">${arte}</div>
+    <div class="cmb-c-tipo">[ ${esc(info.tipoNome)} ]</div>
+    <div class="cmb-c-texto">${esc(info.descricao)}</div>
   </div>`;
 }
 
@@ -33,11 +33,11 @@ function proxima() {
   mostrando = true;
   const { info, oculta, quem } = item;
   const el = document.createElement("div");
-  el.className = "cm-revelar";
-  el.innerHTML = `<div class="cm-revelar-quem">${esc(quem)}</div>
-    <div class="cm-revelar-giro ${oculta ? "fica-verso" : ""}">
-      <div class="cm-revelar-face frente">${oculta ? cartaHTML(info, { oculta: true }) : cartaHTML(info)}</div>
-      <div class="cm-revelar-face tras">${cartaHTML(info, { oculta: true })}</div>
+  el.className = "cmb-revelar";
+  el.innerHTML = `<div class="cmb-revelar-quem">${esc(quem)}</div>
+    <div class="cmb-revelar-giro ${oculta ? "fica-verso" : ""}">
+      <div class="cmb-revelar-face frente">${oculta ? cartaHTML(info, { oculta: true }) : cartaHTML(info)}</div>
+      <div class="cmb-revelar-face tras">${cartaHTML(info, { oculta: true })}</div>
     </div>`;
   let fechou = false;
   const fechar = () => {

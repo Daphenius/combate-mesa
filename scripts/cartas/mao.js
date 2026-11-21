@@ -13,9 +13,9 @@ import { cartaHTML } from "./visual.js";
 
 export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    id: "cm-mao-cartas",
+    id: "cmb-mao-cartas",
     tag: "section",
-    classes: ["cm-mao-cartas"],
+    classes: ["cmb-mao-cartas"],
     window: { frame: false, positioned: false },
     actions: { jogar: MaoCartas.#jogar }
   };
@@ -36,7 +36,7 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
 
   atualizar() {
     const c = this.alvo();
-    document.body.classList.toggle("cm-modo-cartas", !!c);
+    document.body.classList.toggle("cmb-modo-cartas", !!c);
     if (c) this.render({ force: true });
     else if (this.rendered) this.close({ animate: false });
   }
@@ -79,7 +79,7 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender?.(context, options);
     // botão direito: guardar/soltar a carta para o próximo turno
-    this.element.querySelectorAll(".cm-mao-carta").forEach(el => {
+    this.element.querySelectorAll(".cmb-mao-carta").forEach(el => {
       el.addEventListener("contextmenu", ev => {
         ev.preventDefault();
         this.#guardar(el.dataset.uid);

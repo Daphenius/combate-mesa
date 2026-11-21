@@ -71,7 +71,7 @@ function investida(atacante, alvo) {
     // sobe rápido até 35% do tempo, depois volta suave
     const k = t < 0.35 ? CanvasAnimation.easeOutCircle(t / 0.35) : 1 - CanvasAnimation.easeInOutCosine((t - 0.35) / 0.65);
     return { x: ux * k, y: uy * k };
-  }, 420, "cm-investida");
+  }, 420, "cmb-investida");
 }
 
 // Tremor do alvo ao ser atingido
@@ -80,7 +80,7 @@ function tremor(alvo, forte = false) {
   return deslocarSprite(alvo, t => {
     const queda = 1 - t;
     return { x: Math.sin(t * Math.PI * (forte ? 10 : 8)) * amp * queda, y: 0 };
-  }, forte ? 520 : 380, "cm-tremor");
+  }, forte ? 520 : 380, "cmb-tremor");
 }
 
 // Esquiva do alvo quando o ataque erra: um passo de lado e volta
@@ -92,7 +92,7 @@ function esquiva(alvo, atacante) {
   return deslocarSprite(alvo, t => {
     const k = Math.sin(t * Math.PI);
     return { x: px * k, y: py * k };
-  }, 380, "cm-esquiva");
+  }, 380, "cmb-esquiva");
 }
 
 // Brilho vermelho rápido no alvo atingido
@@ -121,7 +121,7 @@ async function projetil(atacante, alvo, cor) {
     await CanvasAnimation.animate([
       { parent: g, attribute: "x", to: b.x },
       { parent: g, attribute: "y", to: b.y }
-    ], { name: `cm-projetil.${foundry.utils.randomID()}`, duration: Math.min(650, 180 + dist * 0.6), easing: CanvasAnimation.easeInCircle });
+    ], { name: `cmb-projetil.${foundry.utils.randomID()}`, duration: Math.min(650, 180 + dist * 0.6), easing: CanvasAnimation.easeInCircle });
   } finally {
     g.destroy();
   }
