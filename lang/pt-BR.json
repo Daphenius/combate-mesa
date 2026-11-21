@@ -149,5 +149,13 @@
   "COMBATE.Barra.mover": "Arraste para mover a barra. Clique duas vezes para voltar ao canto.",
   "COMBATE.Barra.buscar": "Buscar pelo nome…",
   "COMBATE.Aba.bonus": "Ações bônus",
-  "COMBATE.Barra.vazioBonus": "Nada na ficha gasta Ação Bônus."
+  "COMBATE.Barra.vazioBonus": "Nada na ficha gasta Ação Bônus.",
+  "COMBATE.Settings.alvoAoClicar.Name": "Alvo ao clicar no token",
+  "COMBATE.Settings.alvoAoClicar.Hint": "Quando pedir (padrão): ao usar uma carta, ataque, magia ou habilidade que precisa de alvo sem ter marcado ninguém, aparece um aviso e o próximo clique num token marca ele como alvo (Esc cancela). Sempre: clicar no token de outro sempre marca como alvo. Shift+clique soma alvos.",
+  "COMBATE.Settings.alvoAoClicar.sempre": "Sempre ao clicar no token de outro",
+  "COMBATE.Settings.alvoAoClicar.desligado": "Desligado",
+  "COMBATE.Settings.alvoAoClicar.pedir": "Quando a ação pedir alvo",
+  "COMBATE.Alvo.clique": "Clique no token do alvo (Esc cancela).",
+  "COMBATE.Alvo.cliqueCom": "{nome}: clique no token do alvo (Esc cancela).",
+  "COMBATE.Alvo.marcado": "Alvo: {nome}"
 }

@@ -8,6 +8,7 @@
 //  ativo executa ao recebê-la. Sem socket.
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { pedirAlvo } from "../alvo-automatico.js";
 import { MOD, combateAtivo, esc, isActiveGM, loc, tokenNoMapa } from "../core.js";
 import { cartasCustom, regras } from "./config.js";
 import { comprar, estadoCartas, salvarCartas, tirarDaMao, usaCartas } from "./baralho.js";
@@ -182,7 +183,7 @@ const EFEITOS = {
 
   // +2 na CA de um aliado marcado (o mestre aplica, porque o aliado é de outro jogador)
   async proteger({ combatant }) {
-    const alvo = game.user.targets.first();
+    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.proteger.nome") });
     if (!alvo?.actor || alvo.actor.uuid === combatant.actor?.uuid) {
       ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueProteger"));
       return { ok: false };
@@ -191,7 +192,7 @@ const EFEITOS = {
   },
 
   async ajudar({ combatant }) {
-    const alvo = game.user.targets.first();
+    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.ajudar.nome") });
     if (!alvo?.actor || alvo.actor.uuid === combatant.actor?.uuid) {
       ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueAliado"));
       return { ok: false };
@@ -200,7 +201,7 @@ const EFEITOS = {
   },
 
   async agarrar({ actor, event }) {
-    const alvo = game.user.targets.first();
+    const alvo = await pedirAlvo({ nome: loc("COMBATE.Cartas.tipo.agarrar.nome") });
     if (!alvo?.actor) { ui.notifications.warn(loc("COMBATE.Cartas.aviso.marqueAlvo")); return { ok: false }; }
     const modo = await escolher(loc("COMBATE.Cartas.escolher.agarrar"), [
       { valor: "agarrar", img: "icons/svg/net.svg", nome: loc("COMBATE.Cartas.agarrar.agarrar") },

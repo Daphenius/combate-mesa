@@ -99,6 +99,18 @@
   transition: transform .18s ease, filter .18s ease; z-index: 1;
 }
 .cmb-mao-carta { pointer-events: auto; }
+/* pilha de Atacar (Ataque Extra): as cópias ficam atrás da carta da frente */
+.cmb-mao-carta.pilha { margin-left: -6px; }
+.cmb-mao-carta .cmb-pilha-atras {
+  position: absolute; inset: 0; transform: translate(-7px, -7px); border-radius: 7px; z-index: -1;
+  background: var(--cmb-c-ataque); border: 2px solid var(--cmb-latao-escuro);
+  box-shadow: -7px -7px 0 -2px rgba(0, 0, 0, .35), 0 4px 10px rgba(0, 0, 0, .5); filter: brightness(.7);
+}
+.cmb-mao-carta .cmb-pilha-conta {
+  position: absolute; top: -10px; right: -8px; z-index: 2; min-width: 26px; padding: 2px 6px; border-radius: 12px;
+  background: var(--cmb-c-ataque); color: #fff; font-weight: bold; font-size: 13px; text-align: center;
+  border: 2px solid #f0d48a; box-shadow: 0 2px 6px rgba(0, 0, 0, .6);
+}
 .cmb-mao-carta:hover, .cmb-mao-carta:focus-visible { transform: rotate(0deg) translateY(-34px) scale(1.18); z-index: 5; }
 .cmb-mao-carta:hover .cmb-c { box-shadow: 0 0 14px 3px rgba(240, 212, 138, .75), 0 6px 14px rgba(0, 0, 0, .6); }
 .cmb-mao.bloqueada .cmb-mao-carta { filter: saturate(.55) brightness(.8); cursor: default; }

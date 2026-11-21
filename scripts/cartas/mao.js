@@ -47,8 +47,17 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
     const st = estadoCartas(c);
     const r = regras();
     const pode = podeJogar(c);
-    const n = st.mao.length;
-    const cartas = st.mao.map((carta, i) => {
+    // cartas da mesma pilha (Atacar com Ataque Extra) ocupam um só espaço
+    const grupos = [];
+    const porPilha = new Map();
+    for (const carta of st.mao) {
+      const g = carta.pilha ? porPilha.get(carta.pilha) : null;
+      if (g) g.push(carta);
+      else { const novo = [carta]; grupos.push(novo); if (carta.pilha) porPilha.set(carta.pilha, novo); }
+    }
+    const n = grupos.length;
+    const cartas = grupos.map((grupo, i) => {
+      const carta = grupo[0];
       const info = infoCarta(carta);
       // leque: as cartas abrem a partir do centro
       const meio = (n - 1) / 2;
@@ -56,6 +65,7 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
       const desce = Math.abs(i - meio) * Math.abs(i - meio) * 2.5;
       return {
         uid: carta.uid,
+        pilha: grupo.length > 1 ? grupo.length : 0,
         html: cartaHTML(info),
         dica: `<strong>${foundry.utils.escapeHTML(info.nome)}</strong><br>${foundry.utils.escapeHTML(info.descricao)}`,
         estilo: `--ang:${ang}deg; --desce:${desce}px;`
@@ -64,7 +74,7 @@ export class MaoCartas extends HandlebarsApplicationMixin(ApplicationV2) {
     return {
       nome: c.token?.name ?? c.name,
       cartas,
-      vaziaMao: !n,
+      vaziaMao: !st.mao.length,
       pode,
       monte: composicao(c.actor, st.usadas).length,
       armadilhaHTML: st.armadilha ? cartaHTML(infoCarta(st.armadilha), { mini: true, oculta: true }) : "",

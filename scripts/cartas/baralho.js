@@ -87,6 +87,10 @@ export function composicao(actor, excluir = []) {
     // Habilidade: n cópias de CADA habilidade da ficha
     if (tipo === "habilidade") {
       for (const item of opcoesHabilidade(actor)) add(n, { tipo, iid: item.id, nome: item.name, img: item.img, texto: textoDoItem(item) });
+    } else if (tipo === "atacar") {
+      // Atacar entra como UMA carta com uma pilha de n ataques (Ataque Extra):
+      // ocupa um só espaço na mão e cada uso tira o ataque da frente
+      if (n > 0) lista.push({ tipo, pilha: n });
     } else add(n, { tipo });
   }
   for (const def of cartasCustom()) {
@@ -109,22 +113,29 @@ function embaralhar(arr) {
 
 const novaCarta = base => ({ ...base, uid: foundry.utils.randomID() });
 
+// Uma compra vira as cartas da mão: a pilha de Atacar vira n cartas com o
+// mesmo "pilha" (id do grupo), mostradas uma atrás da outra no mesmo espaço.
+function abrirPilha(base) {
+  if (!(base.pilha > 1)) { const { pilha: _pilha, ...resto } = base; return [novaCarta(resto)]; }
+  const grupo = foundry.utils.randomID();
+  return Array.from({ length: base.pilha }, () => novaCarta({ ...base, pilha: grupo }));
+}
+
 // Compra n cartas novas do baralho do personagem.
 // Sem repetir enquanto o baralho tiver cartas; se acabar, embaralha de novo.
 // "repor": a compra extra (+2) sorteia de novo do baralho inteiro, então pode repetir.
 export function comprar(actor, n, { garantirAtacar = false, excluir = [] } = {}) {
   const base = composicao(actor, excluir);
   if (!base.length || n <= 0) return [];
-  const saida = [];
+  const espacos = [];
   let monte = embaralhar(base);
-  while (saida.length < n) {
+  while (espacos.length < n) {
     if (!monte.length) monte = embaralhar(base);
-    saida.push(novaCarta(monte.pop()));
+    espacos.push(monte.pop());
   }
-  if (garantirAtacar && !saida.some(c => c.tipo === "atacar") && base.some(c => c.tipo === "atacar")) {
-    saida[saida.length - 1] = novaCarta({ tipo: "atacar" });
-  }
-  return saida;
+  const atacar = base.find(c => c.tipo === "atacar");
+  if (garantirAtacar && atacar && !espacos.some(c => c.tipo === "atacar")) espacos[espacos.length - 1] = atacar;
+  return espacos.flatMap(abrirPilha);
 }
 
 // ───────────────────────── Compra do turno ─────────────────────────

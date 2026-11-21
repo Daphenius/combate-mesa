@@ -149,5 +149,13 @@
   "COMBATE.Barra.mover": "Drag to move the bar. Double-click to send it back to the corner.",
   "COMBATE.Barra.buscar": "Search by name…",
   "COMBATE.Aba.bonus": "Bonus actions",
-  "COMBATE.Barra.vazioBonus": "Nothing on the sheet uses a Bonus Action."
+  "COMBATE.Barra.vazioBonus": "Nothing on the sheet uses a Bonus Action.",
+  "COMBATE.Settings.alvoAoClicar.Name": "Target on token click",
+  "COMBATE.Settings.alvoAoClicar.Hint": "When needed (default): using a card, attack, spell or ability that needs a target with nobody targeted shows a notice, and your next click on a token targets it (Esc cancels). Always: clicking someone else's token always targets it. Shift+click adds targets.",
+  "COMBATE.Settings.alvoAoClicar.sempre": "Always when clicking someone else's token",
+  "COMBATE.Settings.alvoAoClicar.desligado": "Off",
+  "COMBATE.Settings.alvoAoClicar.pedir": "When the action needs a target",
+  "COMBATE.Alvo.clique": "Click the target's token (Esc cancels).",
+  "COMBATE.Alvo.cliqueCom": "{nome}: click the target's token (Esc cancels).",
+  "COMBATE.Alvo.marcado": "Target: {nome}"
 }

@@ -13,7 +13,7 @@ Se encontrar bugs ou tiver sugestões, abra uma issue. Todo retorno é bem-vindo
 > [!WARNING]
 > **Versão beta, em testes.** Este módulo ainda está sendo testado no Foundry VTT 14 com o sistema D&D 5e 6 e **pode ter erros**. Use primeiro num mundo de teste ou faça backup do seu mundo antes de ativar. Se algo der errado, abra uma [issue](https://github.com/Daphenius/combate-mesa/issues) com um print do console (F12).
 
-**Versão 0.2.10 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
+**Versão 0.3.1 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
 
 ![Combate da Mesa](<docs/barra-e-linha-do-tempo.png>)
 

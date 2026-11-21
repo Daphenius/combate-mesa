@@ -2,7 +2,13 @@
 
 > ⚠️ **Beta, em testes:** o Combate da Mesa ainda está sendo testado no Foundry VTT 14 e no D&D 5e 6 e pode ter erros. Teste primeiro num mundo de teste ou faça backup antes de ativar. Bugs e sugestões: https://github.com/Daphenius/combate-mesa/issues
 
-## v0.2.10 (beta)
+## v0.3.1 (beta)
+
+- **Alvo ao clicar:** ao usar uma carta ou ação que precisa de alvo (Atacar, Agarrar, Ajudar, Proteger, habilidades, magias e ataques da barra) sem ter marcado ninguém, aparece um aviso e o próximo clique num token já marca ele como alvo, sem trocar para a ferramenta Alvo (Esc cancela, Shift+clique soma alvos). Fora disso os cliques continuam normais. Em Interface dá para escolher "Sempre" (clicar no token de outro sempre marca alvo) ou desligar.
+
+- **Pilha de Atacar:** quando o personagem tem mais de um ataque (Ataque Extra ou quantidade configurada maior que 1), as cartas Atacar vêm empilhadas uma atrás da outra e contam como uma carta só, sem tirar espaço das outras cartas da mão. Um número (×2, ×3…) mostra quantos ataques restam; ao usar a carta da frente, a de trás continua na mão.
+
+## v0.3.0 (beta)
 
 - **Campo Guardada** ao lado da mão de cartas: botão direito numa carta leva ela para esse campo, e ela volta na sua próxima mão (ocupando um dos espaços). Clique na carta guardada para devolvê-la à mão antes disso. Se já houver uma carta guardada, ela troca de lugar com a nova.
 

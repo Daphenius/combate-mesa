@@ -394,3 +394,6 @@ body.cmb-sem-hotbar #players { visibility: hidden; }
 .cmb-cfg .cmb-cfg-primario:hover { background: var(--cmb-latao-claro); box-shadow: 0 0 10px rgba(240, 212, 138, .35); }
 @keyframes cmb-cfg-entrar { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 @media (max-width: 700px) { .cmb-cfg { grid-template-columns: 1fr; } .cmb-cfg-nav { grid-row: auto; flex-direction: row; overflow-x: auto; } }
+
+/* esperando o clique no token do alvo */
+body.cmb-escolhendo-alvo #board { cursor: crosshair; }

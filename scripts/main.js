@@ -13,6 +13,7 @@ import { instalarAnuncio } from "./anuncio.js";
 import { instalarPlacar, ResultadosCombate } from "./resultados.js";
 import { LinhaTempo } from "./linha-tempo.js";
 import { BarraAcoes } from "./barra-acoes.js";
+import { instalarAlvoAutomatico } from "./alvo-automatico.js";
 import { conferirCompra, instalarCartas, registrarConfigCartas } from "./cartas/index.js";
 
 const UI = { linha: null, barra: null, mao: null };
@@ -57,6 +58,7 @@ Hooks.once("ready", () => {
   instalarAnimacao();
   instalarAnuncio();
   instalarPlacar();
+  instalarAlvoAutomatico();
 
   // Mudanças no combate e nos combatentes
   for (const h of ["createCombat", "updateCombat", "deleteCombat", "createCombatant", "updateCombatant", "deleteCombatant", "canvasReady"]) {

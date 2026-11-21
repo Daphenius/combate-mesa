@@ -9,8 +9,8 @@
 
   <div class="cmb-mao-leque">
     {{#each cartas}}
-    <button type="button" class="cmb-mao-carta" data-action="jogar" data-uid="{{uid}}" style="{{estilo}}"
-            data-tooltip="{{dica}}" data-tooltip-direction="UP">{{{html}}}</button>
+    <button type="button" class="cmb-mao-carta {{#if pilha}}pilha{{/if}}" data-action="jogar" data-uid="{{uid}}" style="{{estilo}}"
+            data-tooltip="{{dica}}" data-tooltip-direction="UP">{{#if pilha}}<span class="cmb-pilha-atras"></span>{{/if}}{{{html}}}{{#if pilha}}<span class="cmb-pilha-conta">×{{pilha}}</span>{{/if}}</button>
     {{/each}}
     {{#if vaziaMao}}<p class="cmb-mao-vazia">{{localize "COMBATE.Cartas.mao.vazia"}}</p>{{/if}}
   </div>

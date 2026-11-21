@@ -2,7 +2,7 @@
   "id": "combate-mesa",
   "title": "Combate da Mesa (Beta - Em testes)",
   "description": "⚠️ BETA, EM TESTES: este módulo ainda está sendo testado e pode ter erros. Combate com cara de fantasia para D&D 5e: linha do tempo de iniciativa no topo, barra de ações no canto inferior com os selos de Ação, Ação Bônus, Reação e Movimento, animação de ataque no mapa, anúncio de turno, marcador de turno nativo e tela de resultados ao fim do combate. Interface em português ou inglês. Modo opcional de combate com cartas: cada combatente compra uma mão nova por turno e age jogando cartas.",
-  "version": "0.2.10",
+  "version": "0.3.1",
   "authors": [
     {
       "name": "Daphenius"
@@ -10,7 +10,7 @@
   ],
   "url": "https://github.com/Daphenius/combate-mesa",
   "manifest": "https://github.com/Daphenius/combate-mesa/releases/latest/download/module.json",
-  "download": "https://github.com/Daphenius/combate-mesa/releases/download/v0.2.10/combate-mesa.zip",
+  "download": "https://github.com/Daphenius/combate-mesa/releases/download/v0.3.1/combate-mesa.zip",
   "license": "https://github.com/Daphenius/combate-mesa/blob/main/LICENSE",
   "readme": "https://github.com/Daphenius/combate-mesa/blob/main/README.md",
   "changelog": "https://github.com/Daphenius/combate-mesa/blob/main/CHANGELOG.md",
