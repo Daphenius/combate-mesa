@@ -17,6 +17,7 @@ import { instalarAlvoAutomatico } from "./alvo-automatico.js";
 import { instalarDadosEmCena } from "./dados-em-cena.js";
 import { instalarAtaques, registrarAtaques } from "./ataques.js";
 import { MenuAtaques } from "./menu-ataques.js";
+import { estenderTrilhas, instalarTrilhas, registrarTrilhas } from "./trilhas/index.js";
 import { conferirCompra, instalarCartas, registrarConfigCartas } from "./cartas/index.js";
 
 const UI = { linha: null, barra: null, mao: null };
@@ -33,6 +34,7 @@ Hooks.once("init", () => {
   registrarConfigCartas(() => { atualizarTudo(); conferirCompra(); });
   registrarMenu();
   registrarAtaques(() => atualizarTudo(), MenuAtaques);
+  registrarTrilhas();
   // partes reaproveitadas pelos modelos (retrato da linha do tempo, carta da barra)
   foundry.applications.handlebars.loadTemplates([`${PATH}/templates/retrato.hbs`, `${PATH}/templates/carta.hbs`, `${PATH}/templates/config.hbs`, `${PATH}/templates/menu-ataques.hbs`]);
 
@@ -52,6 +54,9 @@ Hooks.once("init", () => {
   });
 });
 
+// Trilhas: no setup o sistema já trocou as classes de Token e régua; estendemos as dele.
+Hooks.once("setup", () => estenderTrilhas());
+
 Hooks.once("ready", () => {
   instalarTema();
   UI.linha = new LinhaTempo();
@@ -65,6 +70,7 @@ Hooks.once("ready", () => {
   instalarAlvoAutomatico();
   instalarDadosEmCena();
   instalarAtaques();
+  instalarTrilhas();
 
   // Mudanças no combate e nos combatentes
   for (const h of ["createCombat", "updateCombat", "deleteCombat", "createCombatant", "updateCombatant", "deleteCombatant", "canvasReady"]) {

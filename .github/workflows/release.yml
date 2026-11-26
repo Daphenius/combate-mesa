@@ -17,5 +17,5 @@ jobs:
           VER=$(jq -r .version module.json)
           TAG="${GITHUB_REF_NAME#v}"
           if [ "$TAG" != "$VER" ]; then echo "Tag $GITHUB_REF_NAME diferente da versão $VER do module.json"; exit 1; fi
-          zip -r "$ID.zip" . -x ".git/*" ".github/*" "*.zip" "CHANGELOG.md"
+          zip -r "$ID.zip" . -x ".git/*" ".github/*" "*.zip" "CHANGELOG.md" "tests/*" "package.json" "eslint.config.mjs"
           gh release upload "$GITHUB_REF_NAME" "$ID.zip" module.json --clobber

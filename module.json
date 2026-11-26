@@ -1,8 +1,8 @@
 {
   "id": "combate-mesa",
   "title": "Combate da Mesa (Beta - Em testes)",
-  "description": "⚠️ BETA, EM TESTES: este módulo ainda está sendo testado e pode ter erros. Combate com cara de fantasia para D&D 5e: linha do tempo de iniciativa no topo, barra de ações no canto inferior com os selos de Ação, Ação Bônus, Reação e Movimento, animação de ataque no mapa, anúncio de turno, marcador de turno nativo e tela de resultados ao fim do combate. Interface em português ou inglês. Modo opcional de combate com cartas: cada combatente compra uma mão nova por turno e age jogando cartas.",
-  "version": "0.3.7",
+  "description": "⚠️ BETA, EM TESTES: este módulo ainda está sendo testado e pode ter erros. Combate com cara de fantasia para D&D 5e: linha do tempo de iniciativa no topo, barra de ações no canto inferior com os selos de Ação, Ação Bônus, Reação e Movimento, animação de ataque no mapa, anúncio de turno, marcador de turno nativo e tela de resultados ao fim do combate. Interface em português ou inglês. Modo opcional de combate com cartas: cada combatente compra uma mão nova por turno e age jogando cartas. Movimento no mapa (Trilhas): caminho que desvia de paredes, alcance do turno pintado no mapa, \"faltam X\" na régua e terreno intransponível por Regiões.",
+  "version": "0.3.8",
   "authors": [
     {
       "name": "Daphenius"
@@ -10,7 +10,7 @@
   ],
   "url": "https://github.com/Daphenius/combate-mesa",
   "manifest": "https://github.com/Daphenius/combate-mesa/releases/latest/download/module.json",
-  "download": "https://github.com/Daphenius/combate-mesa/releases/download/v0.3.7/combate-mesa.zip",
+  "download": "https://github.com/Daphenius/combate-mesa/releases/download/v0.3.8/combate-mesa.zip",
   "license": "https://github.com/Daphenius/combate-mesa/blob/main/LICENSE",
   "readme": "https://github.com/Daphenius/combate-mesa/blob/main/README.md",
   "changelog": "https://github.com/Daphenius/combate-mesa/blob/main/CHANGELOG.md",
@@ -36,7 +36,8 @@
   ],
   "styles": [
     "styles/combate-mesa.css",
-    "styles/cartas.css"
+    "styles/cartas.css",
+    "styles/trilhas.css"
   ],
   "languages": [
     {
@@ -58,8 +59,23 @@
       "lang": "pt-BR",
       "name": "Português (Brasil)",
       "path": "lang/cartas.pt-BR.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/trilhas.en.json"
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/trilhas.pt-BR.json"
     }
   ],
   "flags": {},
-  "socket": true
+  "socket": true,
+  "documentTypes": {
+    "RegionBehavior": {
+      "intransponivel": {}
+    }
+  }
 }

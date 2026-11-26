@@ -13,7 +13,7 @@ Se encontrar bugs ou tiver sugestões, abra uma issue. Todo retorno é bem-vindo
 > [!WARNING]
 > **Versão beta, em testes.** Este módulo ainda está sendo testado no Foundry VTT 14 com o sistema D&D 5e 6 e **pode ter erros**. Use primeiro num mundo de teste ou faça backup do seu mundo antes de ativar. Se algo der errado, abra uma [issue](https://github.com/Daphenius/combate-mesa/issues) com um print do console (F12).
 
-**Versão 0.3.7 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
+**Versão 0.3.8 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
 
 ![Combate da Mesa](<docs/barra-e-linha-do-tempo.png>)
 
@@ -29,6 +29,7 @@ Um combate com cara de fantasia para D&D 5e. Inspirado na ideia de trackers em c
 - **Anúncio de turno** em faixa de estandarte e câmera até o token.
 - **Marcador de turno** com círculo de runas (marcador nativo do Foundry).
 - **Tela de resultados** ao fim do combate, com MVP, curandeiro e mais abates.
+- **Movimento no mapa (Trilhas)**: ao arrastar, o token desvia de paredes, portas fechadas e terreno intransponível; o alcance do turno aparece pintado no mapa; a régua mostra quanto movimento falta; e o mestre manda NPCs andarem até o cursor.
 - **Combate com cartas (opcional)**: cada combatente compra uma mão nova por turno e age jogando cartas, com cartas personalizadas e de macro criadas pelo mestre.
 
 ![Magias e resultados](<docs/magias-e-resultados.png>)
@@ -50,7 +51,7 @@ https://github.com/Daphenius/combate-mesa/releases/latest/download/module.json
 
 ## Configurações
 
-Tudo fica num painel próprio: **Configurações → Configurar Módulos → Combate da Mesa → Abrir painel**. Ele é dividido em Interface, Regras e Efeitos de cena. O mestre vê tudo; cada jogador vê só o que vale para ele (marcado como "Só você").
+Tudo fica num painel próprio: **Configurações → Configurar Módulos → Combate da Mesa → Abrir painel**. Ele é dividido em Interface, Regras, Efeitos de cena, Cartas e Movimento. O mestre vê tudo; cada jogador vê só o que vale para ele (marcado como "Só você").
 
 ![Painel de configurações](<docs/painel-configuracoes.png>)
 
@@ -92,6 +93,18 @@ No menu **Cartas de combate** (Configurar Módulos), o mestre ajusta quantas car
 for (const t of alvos) await t.actor.applyDamage(-5); // cura 5 em cada alvo
 ChatMessage.create({ content: `${actor.name} solta um grito de guerra!` });
 ```
+
+## Movimento no mapa (Trilhas)
+
+Antes era o módulo separado Trilhas da Mesa; agora faz parte do Combate da Mesa. Usa o movimento nativo do Foundry 14 (régua, custo de terreno das Regiões e bloqueio por paredes continuam sendo do Foundry). Pode ser desligado inteiro em **Movimento**, no painel de configurações.
+
+- **Arrastar desviando de paredes:** o trajeto contorna paredes, portas fechadas e terreno intransponível em vez de parar na parede. Terreno difícil é evitado quando o desvio sai mais barato.
+- **Alcance do turno:** ao selecionar um token, pinta as casas que ele alcança com o movimento que sobra no turno (por padrão só em combate). A Disparada e as cartas Mover/Disparada do combate já aumentam esse alcance. **Alt+R** liga ou desliga a pintura.
+- **"Faltam X" na régua:** ao arrastar, o último ponto da régua mostra quanto movimento sobra ou quanto passou.
+- **NPC anda sozinho (mestre):** selecione os tokens, pare o cursor no destino e aperte **Alt+M**. Cada um anda pelo melhor caminho, desviando de paredes e de outros tokens, e para quando acaba o movimento do turno.
+- **Terreno intransponível por Região:** novo comportamento de Região, com escolha de quais movimentos ele bloqueia (ex.: só Andar, para um abismo que voadores atravessam).
+
+Limites: só grade quadrada e tokens de tamanho inteiro (1×1, 2×2…). Em grade hexagonal ou sem grade, o movimento continua sendo o normal do Foundry. `npm test` roda os 42 testes do motor de caminho em Node, sem o Foundry.
 
 ## Para macros e outros módulos
 

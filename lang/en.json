@@ -191,5 +191,7 @@
   "COMBATE.Ataques.barra.dica": "Weapon attacks left this turn: {total} (Attack action: {porAcao} attacks; extra: {extras}).",
   "COMBATE.Ataques.barra.multiDica": "Multiple Attacks: gain +{n} attacks this turn. {restam} of {usos} uses left ({recarga}).",
   "COMBATE.Ataques.multi.esgotado": "No Multiple Attacks uses left.",
-  "COMBATE.Ataques.multi.chat": "{nome} activated <strong>Multiple Attacks</strong>: +{n} attacks this turn. ({restam} of {usos} left)"
+  "COMBATE.Ataques.multi.chat": "{nome} activated <strong>Multiple Attacks</strong>: +{n} attacks this turn. ({restam} of {usos} left)",
+  "COMBATE.Config.secao.trilhas.nome": "Movement",
+  "COMBATE.Config.secao.trilhas.descricao": "Trails: wall-avoiding paths, turn range, ruler and NPCs that walk on their own."
 }

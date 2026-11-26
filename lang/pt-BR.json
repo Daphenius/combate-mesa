@@ -191,5 +191,7 @@
   "COMBATE.Ataques.barra.dica": "Ataques com arma que restam neste turno: {total} (Ação de Ataque: {porAcao} ataques; extras: {extras}).",
   "COMBATE.Ataques.barra.multiDica": "Ataques múltiplos: ganha +{n} ataques neste turno. Restam {restam} de {usos} usos ({recarga}).",
   "COMBATE.Ataques.multi.esgotado": "Os usos de Ataques múltiplos acabaram.",
-  "COMBATE.Ataques.multi.chat": "{nome} ativou <strong>Ataques múltiplos</strong>: +{n} ataques neste turno. (restam {restam} de {usos})"
+  "COMBATE.Ataques.multi.chat": "{nome} ativou <strong>Ataques múltiplos</strong>: +{n} ataques neste turno. (restam {restam} de {usos})",
+  "COMBATE.Config.secao.trilhas.nome": "Movimento",
+  "COMBATE.Config.secao.trilhas.descricao": "Trilhas: caminho que desvia de paredes, alcance do turno, régua e NPC que anda sozinho."
 }

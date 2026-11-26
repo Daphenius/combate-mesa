@@ -2,6 +2,18 @@
 
 > ⚠️ **Beta, em testes:** o Combate da Mesa ainda está sendo testado no Foundry VTT 14 e no D&D 5e 6 e pode ter erros. Teste primeiro num mundo de teste ou faça backup antes de ativar. Bugs e sugestões: https://github.com/Daphenius/combate-mesa/issues
 
+## v0.3.8 (beta)
+
+- **Movimento no mapa (Trilhas) agora faz parte do Combate da Mesa.** O que era o módulo separado Trilhas da Mesa entrou aqui:
+  - ao arrastar, o token **desvia de paredes**, portas fechadas e terreno intransponível;
+  - o **alcance do turno** aparece pintado no mapa ao selecionar o token (Alt+R liga ou desliga);
+  - a régua mostra **"faltam X"** (ou quanto passou);
+  - o mestre manda os tokens selecionados **andarem até o cursor** com Alt+M;
+  - novo comportamento de Região **Terreno intransponível**.
+- O alcance e o "faltam X" já contam a **Disparada** e as cartas **Mover/Disparada** do combate.
+- Nova seção **Movimento** no painel de configurações, com uma chave para desligar tudo (precisa recarregar) e as opções de cada recurso.
+- Só grade quadrada e tokens de tamanho inteiro; em outras grades o movimento continua sendo o normal do Foundry.
+
 ## v0.3.7 (beta)
 
 - **Ataques por ação (modo padrão, sem cartas):** a Ação de Ataque agora dá vários ataques com arma, como o Ataque Extra do D&D 5e. O primeiro ataque gasta a Ação e os outros saem de graça no mesmo turno; a barra mostra quantos ataques ainda restam. O número vem da ficha (Ataque Extra, Multiataque) ou o mestre ajusta por personagem.
