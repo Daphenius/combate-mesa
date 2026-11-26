@@ -6,8 +6,11 @@
 
 import { MOD, apagarEfeitos, cfg, combateAtivo, combatenteDoAtor, isActiveGM, loc } from "./core.js";
 import { cartaEmUso, usaCartas } from "./cartas/index.js";
+import { ataquesPorAcao, ehAtaqueArma } from "./ataques.js";
 
-export const PADRAO = Object.freeze({ acao: false, bonus: false, reacao: false, disparada: false });
+// ataques: ataques com arma que ainda restam da Ação de Ataque (Ataque Extra)
+// extras: ataques ganhos pela habilidade Ataques múltiplos neste turno
+export const PADRAO = Object.freeze({ acao: false, bonus: false, reacao: false, disparada: false, ataques: 0, extras: 0 });
 
 // tipo de ativação do dnd5e → selo do módulo
 export const SELO_DO_TIPO = { action: "acao", bonus: "bonus", reaction: "reacao" };
@@ -60,6 +63,25 @@ export function movido(tokenDoc) {
   } catch { return 0; }
 }
 
+// ───────────────────────── Ataques ─────────────────────────
+
+// Um ataque com arma: o primeiro gasta a Ação e libera os outros do Ataque Extra;
+// depois de acabar, usa os ataques extras dos Ataques múltiplos.
+async function contarAtaque(c) {
+  const st = estado(c);
+  if (st.acao && st.ataques > 0) return definir(c, { ataques: st.ataques - 1 });
+  if (!st.acao) return definir(c, { acao: true, ataques: Math.max(0, ataquesPorAcao(c.actor) - 1) });
+  if (st.extras > 0) return definir(c, { extras: st.extras - 1 });
+  return gastar(c, "acao");
+}
+
+// Quantos ataques com arma o combatente ainda tem neste turno
+export function ataquesRestantes(c) {
+  const st = estado(c);
+  const daAcao = st.acao ? (Number(st.ataques) || 0) : ataquesPorAcao(c.actor);
+  return { daAcao, extras: Number(st.extras) || 0, total: daAcao + (Number(st.extras) || 0), porAcao: ataquesPorAcao(c.actor) };
+}
+
 // ───────────────────────── Ganchos ─────────────────────────
 
 export function instalarEconomia(aoMudar) {
@@ -70,7 +92,10 @@ export function instalarEconomia(aoMudar) {
     const c = combatenteDoAtor(activity?.actor);
     if (!selo || !c) return;
     if (usaCartas(c)) return; // no modo de cartas quem limita são as cartas
-    if (estado(c)[selo]) {
+    const st = estado(c);
+    // ataque com arma ainda liberado pelo Ataque Extra ou pelos Ataques múltiplos
+    const ataqueLivre = ehAtaqueArma(activity) && (st.ataques > 0 || st.extras > 0);
+    if (st[selo] && !ataqueLivre) {
       ui.notifications.warn(loc("COMBATE.Economia.jaGasto", { selo: loc(`COMBATE.Selo.${selo}`) }));
       return false;
     }
@@ -85,7 +110,9 @@ export function instalarEconomia(aoMudar) {
   Hooks.on("dnd5e.postUseActivity", activity => {
     const selo = seloDaAtividade(activity);
     const c = combatenteDoAtor(activity?.actor);
-    if (selo && c) gastar(c, selo);
+    if (!selo || !c) return;
+    if (!usaCartas(c) && ehAtaqueArma(activity)) return contarAtaque(c);
+    gastar(c, selo);
   });
 
   // Início do turno: o mestre devolve os selos de quem vai jogar e limpa o rastro de movimento.

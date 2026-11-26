@@ -7,7 +7,8 @@
 
 import { ApplicationV2, HandlebarsApplicationMixin, MOD, PATH, cfg, combateAtivo, debounceRender, imagemDe, loc, tokenNoMapa } from "./core.js";
 import { ACOES_BASICAS, usarAcaoBasica } from "./acoes-basicas.js";
-import { alternar, deslocamento, estado, movido, seloDoItem } from "./economia.js";
+import { alternar, ataquesRestantes, deslocamento, estado, movido, seloDoItem } from "./economia.js";
+import { estadoMulti, usarMultiataque } from "./ataques.js";
 import { movimentoExtra, usaCartas } from "./cartas/index.js";
 
 const ABAS = [
@@ -61,7 +62,8 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
       selo: BarraAcoes.#selo,
       minimizar: BarraAcoes.#minimizar,
       terminarTurno: BarraAcoes.#terminarTurno,
-      abrirFicha: BarraAcoes.#abrirFicha
+      abrirFicha: BarraAcoes.#abrirFicha,
+      multiataque: BarraAcoes.#multiataque
     }
   };
 
@@ -194,7 +196,9 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
         seloNome: selo ? loc(`COMBATE.Selo.${selo}`) : loc("COMBATE.Selo.especial"),
         usos: usos(item),
         nivel: t === "spell" ? (item.system.level ?? 0) : null,
-        esgotado: (selo && gastos[selo]) || (item.system.uses?.max && !item.system.uses.value),
+        // armas continuam liberadas enquanto sobrar ataque (Ataque Extra / Ataques múltiplos)
+        esgotado: (selo && gastos[selo] && !(selo === "acao" && t === "weapon" && (gastos.ataques > 0 || gastos.extras > 0)))
+          || (item.system.uses?.max && !item.system.uses.value),
         tooltip: tooltipItem(item)
       });
     }
@@ -245,6 +249,21 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
       id: s, icone: SELO_ICONE[s], nome: loc(`COMBATE.Selo.${s}`), curto: loc(`COMBATE.SeloCurto.${s}`), gasto: gastos[s]
     }));
 
+    // Ataques do turno (Ataque Extra + Ataques múltiplos) e a habilidade Ataques múltiplos
+    let ataques = null, multi = null;
+    if (!modoCartas) {
+      const r = ataquesRestantes(c);
+      if (r.porAcao > 1 || r.extras > 0) ataques = {
+        ...r, gasto: r.total <= 0,
+        dica: loc("COMBATE.Ataques.barra.dica", { total: r.total, porAcao: r.porAcao, extras: r.extras })
+      };
+      const m = estadoMulti(actor);
+      if (m.usos > 0) multi = {
+        ...m, esgotado: m.restam <= 0 || !c.isOwner,
+        dica: loc("COMBATE.Ataques.barra.multiDica", { n: m.extras, restam: m.restam, usos: m.usos, recarga: loc(`COMBATE.Ataques.recarga.${m.recarga}`) })
+      };
+    }
+
     let cartas = [], grupos = null, basicas = null;
     if (modoCartas) {
       // a mão de cartas (cartas/mao.js) toma o lugar das abas
@@ -269,6 +288,8 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
       seuTurno,
       podeTerminar: seuTurno && c.isOwner,
       selos,
+      ataques,
+      multi,
       mov,
       abas: ABAS.map(a => ({ ...a, nome: loc(`COMBATE.Aba.${a.id}`), ativa: a.id === aba })),
       aba,
@@ -317,4 +338,6 @@ export class BarraAcoes extends HandlebarsApplicationMixin(ApplicationV2) {
   static #terminarTurno() { return combateAtivo()?.nextTurn(); }
 
   static #abrirFicha() { return this.alvo()?.actor?.sheet?.render(true); }
+
+  static #multiataque() { return usarMultiataque(this.alvo()); }
 }

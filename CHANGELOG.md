@@ -2,6 +2,18 @@
 
 > ⚠️ **Beta, em testes:** o Combate da Mesa ainda está sendo testado no Foundry VTT 14 e no D&D 5e 6 e pode ter erros. Teste primeiro num mundo de teste ou faça backup antes de ativar. Bugs e sugestões: https://github.com/Daphenius/combate-mesa/issues
 
+## v0.3.7 (beta)
+
+- **Ataques por ação (modo padrão, sem cartas):** a Ação de Ataque agora dá vários ataques com arma, como o Ataque Extra do D&D 5e. O primeiro ataque gasta a Ação e os outros saem de graça no mesmo turno; a barra mostra quantos ataques ainda restam. O número vem da ficha (Ataque Extra, Multiataque) ou o mestre ajusta por personagem.
+- **Ataques múltiplos:** nova habilidade que o mestre combina com cada jogador. Ela aparece como um botão ao lado dos selos da barra; cada vez que o jogador ativa, ganha mais ataques neste turno. O mestre define quantas vezes pode ativar, quantos ataques cada uso dá e quando recarrega (a cada turno, a cada combate, descanso curto ou descanso longo).
+- **Menu "Ataques por personagem"** (Configurações > Configurar Módulos > Combate da Mesa), só para o mestre, com padrões para PJs e NPCs.
+
+## v0.3.6 (beta)
+
+- **Correção do clique no aliado (Proteger, Ajudar, Agarrar):** para o mestre, clicar no token do alvo enquanto o aviso estava aberto era ignorado (o Foundry seleciona o token no mesmo clique e o módulo achava que era o próprio personagem). Agora o clique marca o alvo e a seleção volta para quem está agindo.
+- **Marcar o alvo do jeito normal também vale:** com o aviso aberto, marcar o alvo pela tecla T ou pela ferramenta Alvo completa a ação na hora (antes o aviso continuava esperando o clique e a carta falhava).
+- Um alvo antigo marcado no próprio personagem não é mais usado: o aviso pede o alvo de novo.
+
 ## v0.3.5 (beta)
 
 - **Correção do alvo no próprio personagem:** enquanto o módulo espera o clique no alvo, clicar no seu próprio token (ou num token selecionado) agora é só seleção normal e não marca você mesmo como alvo; o aviso continua esperando o clique no alvo de verdade.

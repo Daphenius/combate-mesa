@@ -1,0 +1,30 @@
+<div class="cmb-menu-lista">
+  <p class="hint cmb-menu-intro">{{localize "COMBATE.Ataques.menu.intro"}}</p>
+  {{#each personagens}}
+  <details class="cmb-menu-ator" {{#if alterado}}open{{/if}}>
+    <summary>
+      <img src="{{img}}" alt=""><span>{{nome}}</span>
+      {{#if alterado}}<span class="cmb-menu-tag">{{localize "COMBATE.Ataques.menu.manual"}}</span>{{/if}}
+      <button type="button" class="cmb-menu-limpar" data-action="limparAtor" data-chave="{{chave}}" data-tooltip="{{localize 'COMBATE.Ataques.menu.limpar'}}"><i class="fa-solid fa-rotate-left"></i></button>
+    </summary>
+    <div class="cmb-menu-grade cmb-menu-ataques-grade">
+      <label class="cmb-menu-qtd" data-tooltip="{{localize 'COMBATE.Ataques.menu.porAcaoDica'}}">
+        <i class="fa-solid fa-khanda"></i><span>{{localize "COMBATE.Ataques.menu.porAcao"}}</span>
+        <input type="number" name="atores.{{chave}}.porAcao" value="{{porAcao}}" placeholder="{{autoPorAcao}}" min="1" max="10" step="1">
+      </label>
+      <label class="cmb-menu-qtd" data-tooltip="{{localize 'COMBATE.Ataques.menu.usosDica'}}">
+        <i class="fa-solid fa-burst"></i><span>{{localize "COMBATE.Ataques.menu.usos"}}</span>
+        <input type="number" name="atores.{{chave}}.usos" value="{{usos}}" placeholder="0" min="0" max="20" step="1">
+      </label>
+      <label class="cmb-menu-qtd" data-tooltip="{{localize 'COMBATE.Ataques.menu.extrasDica'}}">
+        <i class="fa-solid fa-plus"></i><span>{{localize "COMBATE.Ataques.menu.extras"}}</span>
+        <input type="number" name="atores.{{chave}}.extras" value="{{extras}}" placeholder="1" min="1" max="10" step="1">
+      </label>
+      <label class="cmb-menu-qtd" data-tooltip="{{localize 'COMBATE.Ataques.menu.recargaDica'}}">
+        <i class="fa-solid fa-rotate"></i><span>{{localize "COMBATE.Ataques.menu.recarga"}}</span>
+        <select name="atores.{{chave}}.recarga">{{#each recargas}}<option value="{{valor}}" {{#if marcado}}selected{{/if}}>{{rotulo}}</option>{{/each}}</select>
+      </label>
+    </div>
+  </details>
+  {{/each}}
+</div>

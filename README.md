@@ -13,7 +13,7 @@ Se encontrar bugs ou tiver sugestões, abra uma issue. Todo retorno é bem-vindo
 > [!WARNING]
 > **Versão beta, em testes.** Este módulo ainda está sendo testado no Foundry VTT 14 com o sistema D&D 5e 6 e **pode ter erros**. Use primeiro num mundo de teste ou faça backup do seu mundo antes de ativar. Se algo der errado, abra uma [issue](https://github.com/Daphenius/combate-mesa/issues) com um print do console (F12).
 
-**Versão 0.3.5 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
+**Versão 0.3.7 (beta)** · Foundry VTT 14 · D&D 5e 6 · Português e English · Licença MIT · 🧪 Em testes no Foundry VTT e no D&D 5e
 
 ![Combate da Mesa](<docs/barra-e-linha-do-tempo.png>)
 
@@ -23,6 +23,7 @@ Um combate com cara de fantasia para D&D 5e. Inspirado na ideia de trackers em c
 
 - **Linha do tempo de iniciativa** no topo, com quem joga agora, os próximos e a próxima rodada.
 - **Barra de ações** no canto inferior com os selos ◆ Ação, ▶ Ação Bônus, ↺ Reação e a barra de Movimento, no espírito das ações do Pathfinder, mas com a economia do 5e.
+- **Vários ataques por ação**: o mestre define quantos ataques a Ação de Ataque dá a cada personagem (Ataque Extra; automático pela ficha) e pode dar a habilidade **Ataques múltiplos**, que o jogador ativa na barra para ganhar ataques extras.
 - **Cartas de ação**: armas, magias por círculo (com espaços de magia), habilidades, itens e ações básicas (Disparada, Esquiva, Desengajar, Ajudar, Esconder, Procurar, Preparar, Usar objeto).
 - **Animação de ataque** no mapa: investida, projétil, tremor, esquiva e texto de acerto/erro/crítico.
 - **Anúncio de turno** em faixa de estandarte e câmera até o token.
@@ -81,7 +82,7 @@ Ligue em **Combate com cartas**, na seção **Cartas** do painel. No início do 
 - **Armadilha** fica virada ao lado da mão. Quando alguém te ataca, ela dispara e abre o seu contra-ataque.
 - **Compre +2** compra 2 cartas aleatórias na hora, então dá para ter várias iguais.
 - **Cartas de defesa** (Defender, Proteger, Resistir) vão para o campo de Defesa ao lado da mão e valem até o início do seu próximo turno. Cada uma só pode ser usada 1 vez por combate.
-- **Truque** e **Habilidade** voltam para a mão depois de usadas (Habilidade só enquanto tiver usos, se tiver limite). **Magia** volta enquanto houver espaço de magia.
+- **Truque** volta para o baralho depois de usado. **Habilidade** volta para a mão depois de usada (Habilidade só enquanto tiver usos, se tiver limite). **Magia** volta enquanto houver espaço de magia.
 - **Habilidades da ficha** (Cura pelas Mãos, Retomar o Fôlego, Inspiração de Bardo…) viram cartas próprias, com o nome e o ícone da habilidade, e gastam os usos normalmente.
 
 No menu **Cartas de combate** (Configurar Módulos), o mestre ajusta quantas cartas de cada tipo cada personagem tem (em branco = automático pela ficha) e cria **cartas personalizadas**. Uma carta de macro recebe `actor`, `token`, `combatant`, `carta`, `alvos` e `usuario`:

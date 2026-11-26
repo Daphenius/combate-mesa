@@ -49,8 +49,11 @@ function marcaSemPedido(token) {
 
 // O token é de quem está agindo? (o ator do pedido, um token selecionado,
 // ou, para o jogador, qualquer token dele)
-function ehProprio(token) {
-  if (token.controlled) return true;
+// antes: ids dos tokens que já estavam selecionados ANTES do clique (o Foundry
+// seleciona o token clicado logo no apertar do botão, então token.controlled
+// já viria true para qualquer token que o mestre clicar)
+function ehProprio(token, antes = new Set()) {
+  if (antes.has(token.id)) return true;
   const uuid = token.actor?.uuid;
   if (pedido?.ator && uuid === pedido.ator) return true;
   if (!game.user.isGM && token.document.isOwner) return true;
@@ -103,7 +106,8 @@ function encerrarPedido(token) {
  * Se já houver alvo marcado, resolve na hora com ele.
  */
 export function pedirAlvo({ nome = "", ator = null } = {}) {
-  const atual = game.user.targets.first();
+  // já tem alvo marcado (que não seja o próprio personagem): usa ele
+  const atual = [...game.user.targets].find(t => !(ator && t.actor?.uuid === ator.uuid));
   if (atual) return Promise.resolve(atual);
   if (modo() === "desligado" || !canvas.ready) return Promise.resolve(null);
   encerrarPedido(null);
@@ -132,7 +136,10 @@ export function instalarAlvoAutomatico() {
   let inicio = null;
 
   const aoApertar = ev => {
-    inicio = ev.button === 0 ? { x: ev.clientX, y: ev.clientY, t: performance.now() } : null;
+    inicio = ev.button === 0 ? {
+      x: ev.clientX, y: ev.clientY, t: performance.now(),
+      antes: new Set((canvas.tokens?.controlled ?? []).map(t => t.id))
+    } : null;
   };
 
   const aoSoltar = ev => {
@@ -151,8 +158,14 @@ export function instalarAlvoAutomatico() {
     if (pedido) {
       // clicar no próprio personagem (ou num token selecionado) é seleção normal,
       // não alvo: o pedido continua esperando o clique no alvo
-      if (ehProprio(token)) return;
+      if (ehProprio(token, i.antes)) return;
       marcar(token, ev.shiftKey);
+      // o clique também selecionou o alvo (mestre): devolve a seleção para quem está agindo,
+      // porque as rolagens usam o token selecionado
+      if (!i.antes.has(token.id) && token.controlled && i.antes.size) {
+        token.release();
+        for (const id of i.antes) canvas.tokens.get(id)?.control({ releaseOthers: false });
+      }
       ui.notifications.info(loc("COMBATE.Alvo.marcado", { nome: token.name }));
       encerrarPedido(token);
     } else if (marcaSemPedido(token)) marcar(token, ev.shiftKey);
@@ -169,6 +182,14 @@ export function instalarAlvoAutomatico() {
   ligar();
   Hooks.on("canvasReady", ligar);
   document.addEventListener("keydown", ev => { if (ev.key === "Escape" && pedido) encerrarPedido(null); });
+
+  // Marcou o alvo do jeito nativo (tecla T, ferramenta Alvo, clique duplo direito)
+  // enquanto o aviso estava aberto: vale também
+  Hooks.on("targetToken", (user, token, marcado) => {
+    if (!pedido || !marcado || user?.id !== game.user.id) return;
+    if (pedido.ator && token.actor?.uuid === pedido.ator) return;
+    encerrarPedido(token);
+  });
 
   // Ataque, magia ou habilidade com alvo, usado sem ninguém marcado (no combate):
   // avisa e deixa o próximo clique escolher o alvo. Não bloqueia o uso, porque

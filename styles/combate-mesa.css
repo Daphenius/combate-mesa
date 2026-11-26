@@ -172,6 +172,23 @@ body.cmb-claro {
 .cmb-barra .cmb-selo:hover { filter: brightness(1.1); box-shadow: none; }
 .cmb-barra .cmb-selo.gasto { background: transparent; color: var(--cmb-suave); border-color: var(--cmt-vazio); text-decoration: line-through; }
 
+/* ataques que restam no turno (Ataque Extra + Ataques múltiplos) */
+.cmb-barra .cmb-ataques {
+  display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 13px;
+  font-size: 12px; font-weight: 700; color: var(--cmb-acao); border: 1px solid var(--cmb-acao);
+}
+.cmb-barra .cmb-ataques.gasto { color: var(--cmb-suave); border-color: var(--cmt-vazio); }
+/* habilidade Ataques múltiplos */
+.cmb-barra .cmb-multi {
+  display: inline-flex; align-items: center; gap: 5px; width: auto; height: 26px; padding: 0 10px; margin: 0;
+  border-radius: 13px; font-size: 12px; font-weight: 700; line-height: 1;
+  color: #15100a; background: linear-gradient(135deg, #f0b45a, #d9623b); border: 1px solid #f0d48a;
+  box-shadow: 0 0 8px rgba(240, 140, 70, .45);
+}
+.cmb-barra .cmb-multi small { font-size: 10px; font-weight: 600; opacity: .8; }
+.cmb-barra .cmb-multi:hover { filter: brightness(1.1); }
+.cmb-barra .cmb-multi.gasto { background: transparent; color: var(--cmb-suave); border-color: var(--cmt-vazio); box-shadow: none; }
+
 .cmb-movimento { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 90px; max-width: 190px; margin-left: 4px; color: var(--cmb-mov); font-size: 11px; }
 .cmb-movimento.disparada { color: #8fd4ff; }
 .cmb-mov-barra { flex: 1; height: 4px; border-radius: 2px; background: var(--cmt-vazio); overflow: hidden; }

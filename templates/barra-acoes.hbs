@@ -15,6 +15,16 @@
         <i class="{{icone}}"></i><span>{{curto}}</span>
       </button>
       {{/each}}
+      {{#if ataques}}
+      <span class="cmb-ataques {{#if ataques.gasto}}gasto{{/if}}" data-tooltip="{{ataques.dica}}">
+        <i class="fa-solid fa-khanda"></i><span>{{ataques.total}}</span>
+      </span>
+      {{/if}}
+      {{#if multi}}
+      <button type="button" class="cmb-multi {{#if multi.esgotado}}gasto{{/if}}" data-action="multiataque" data-tooltip="{{multi.dica}}">
+        <i class="fa-solid fa-burst"></i><span>+{{multi.extras}}</span><small>{{multi.restam}}/{{multi.usos}}</small>
+      </button>
+      {{/if}}
       {{/unless}}
       {{#if mov}}
       <div class="cmb-movimento {{#if mov.disparada}}disparada{{/if}}" data-tooltip="{{localize 'COMBATE.Barra.movimento'}}">

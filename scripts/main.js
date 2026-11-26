@@ -15,6 +15,8 @@ import { LinhaTempo } from "./linha-tempo.js";
 import { BarraAcoes } from "./barra-acoes.js";
 import { instalarAlvoAutomatico } from "./alvo-automatico.js";
 import { instalarDadosEmCena } from "./dados-em-cena.js";
+import { instalarAtaques, registrarAtaques } from "./ataques.js";
+import { MenuAtaques } from "./menu-ataques.js";
 import { conferirCompra, instalarCartas, registrarConfigCartas } from "./cartas/index.js";
 
 const UI = { linha: null, barra: null, mao: null };
@@ -30,8 +32,9 @@ Hooks.once("init", () => {
   // modo de cartas (opcional): ao mudar as regras, redesenha e confere a compra do turno
   registrarConfigCartas(() => { atualizarTudo(); conferirCompra(); });
   registrarMenu();
+  registrarAtaques(() => atualizarTudo(), MenuAtaques);
   // partes reaproveitadas pelos modelos (retrato da linha do tempo, carta da barra)
-  foundry.applications.handlebars.loadTemplates([`${PATH}/templates/retrato.hbs`, `${PATH}/templates/carta.hbs`, `${PATH}/templates/config.hbs`]);
+  foundry.applications.handlebars.loadTemplates([`${PATH}/templates/retrato.hbs`, `${PATH}/templates/carta.hbs`, `${PATH}/templates/config.hbs`, `${PATH}/templates/menu-ataques.hbs`]);
 
   // Marcador de turno nativo do Foundry: só trocamos a imagem padrão (quando o mestre
   // não escolheu outra nas configurações do Rastreador de Combate). A animação
@@ -61,6 +64,7 @@ Hooks.once("ready", () => {
   instalarPlacar();
   instalarAlvoAutomatico();
   instalarDadosEmCena();
+  instalarAtaques();
 
   // Mudanças no combate e nos combatentes
   for (const h of ["createCombat", "updateCombat", "deleteCombat", "createCombatant", "updateCombatant", "deleteCombatant", "canvasReady"]) {
